@@ -83,6 +83,7 @@ public:
     int textureRes;
     float dancerRadiusSquared;
     float timeStep;
+    float velocityScale;
     float particleLife;
     float particleSize;
     float fractalScale;

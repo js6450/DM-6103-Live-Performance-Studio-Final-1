@@ -8,6 +8,7 @@ uniform sampler2DRect fractalData;
 
 uniform vec2 screen;
 uniform float timestep;
+uniform float velocityScale;
 
 in vec2 vTexCoord;
 
@@ -25,20 +26,19 @@ void main(void){
         pos = origPos;
     } else{
         
+        vec2 fractal = vec2(1.0,1.0);
+        
         if (pos.x > 0.0 && pos.x < 1.0 && pos.y > 0.0 && pos.y < 1.0){
-            vec2 fractal = texture( fractalData, vec2(pos.x*screen.x,pos.y*screen.y) ).rg;
+            fractal = texture( fractalData, vec2(pos.x*screen.x,pos.y*screen.y) ).rg;
             
-            fractal += 1; // Maps 0-2
-            fractal *= 0.5; // Maps 0-1
-            fractal += 0.5; // Should be 1-above to center around 1. Now: 0.5-1.5
-            pos += vel * timestep * fractal;
-            
-            /* Phase 2
-            pos += vel * timestep * fractal;
-            */
-        } else {
-            pos += vel * timestep;
+            if (true){ // For phase 2 do not engage this if statement and perhaps decrease life
+                fractal += 1; // Maps 0-2
+                fractal *= 0.5; // Maps 0-1
+                fractal += 0.5; // Should be 1-above to center around 1. Now: 0.5-1.5
+            }
         }
+        
+        pos += vel * fractal * timestep * velocityScale;
         
     }
     

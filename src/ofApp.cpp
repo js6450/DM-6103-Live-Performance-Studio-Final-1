@@ -4,7 +4,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     particleSize = 0.5f;
-    particleLife = 1.8f;
+    particleLife = 15.0f;
+    velocityScale = 0.7f;
     timeStep = 0.005f;
     numParticles = 1000000;
     dancerRadiusSquared = 50*50;
@@ -169,6 +170,7 @@ void ofApp::update(){
     updatePos.setUniformTexture("fractalData", fractal.getTexture(), 4);  // Velocity
     updatePos.setUniform2f("screen", (float)width, (float)height);
     updatePos.setUniform1f("timestep", (float) timeStep);
+    updatePos.setUniform1f("velocityScale", (float)velocityScale);
     
     // draw the source position texture to be updated
     posPingPong.src->draw(0, 0);
