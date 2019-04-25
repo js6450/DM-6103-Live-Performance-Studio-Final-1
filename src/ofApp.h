@@ -14,14 +14,6 @@
 
 #include "ofMain.h"
 
-// Struct for doing PingPong quickly and easy
-//
-// Because on GPU you can't write over the texture that you are reading we are
-// using to pair of ofFbo attached together on what we call pingPongBuffer
-// Learn more about Ping-Pong at:
-//
-// http://www.seas.upenn.edu/~cis565/fbo.htm#setupgl4
-//
 struct pingPongBuffer {
 public:
     void allocate( int _width, int _height, int _internalformat = GL_RGBA){
@@ -91,10 +83,13 @@ public:
     ofShader updatePos;
     ofShader updateVel;
     ofShader updateAge;
+    ofShader densityFilter;
     
     pingPongBuffer posPingPong;
     pingPongBuffer velPingPong;
     pingPongBuffer agePingPong;
+    pingPongBuffer effectsPingPong;
+    
     ofFbo origPos;
     ofFbo origVel;
     

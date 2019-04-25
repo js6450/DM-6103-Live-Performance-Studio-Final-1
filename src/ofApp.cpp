@@ -23,6 +23,7 @@ void ofApp::setup(){
     updatePos.load("passthru.vert", "posUpdate.frag");// shader for updating the texture that store the particles position on RG channels
     updateVel.load("passthru.vert", "velUpdate.frag");// shader for updating the texture that store the particles velocity on RG channels
     updateAge.load("passthru.vert", "ageUpdate.frag");// shader for updating the texture that store the particles velocity on R channel
+    densityFilter.load("passthru.vert", "densityFilter.frag");
     
     // Frag, Vert and Geo shaders for the rendering process of the spark image
     updateRender.setGeometryInputType(GL_POINTS);
@@ -87,6 +88,9 @@ void ofApp::setup(){
             mesh.addTexCoord(ofVec2f(x, y));
         }
     }
+    
+    // Allocate the effects
+    effectsPingPong.allocate(width, height, GL_RGB32F);
     
     // Create fractal noise map array values -1 : 1
     int fractalRes = width;
@@ -214,6 +218,20 @@ void ofApp::update(){
     renderFBO.end();
     ofPopStyle();
     
+    // Transfer renderFBO to effectsPingPong src
+    effectsPingPong.src->begin();
+    ofClear(0);
+    renderFBO.draw(0,0);
+    effectsPingPong.src->end();
+    
+    // Apply effects
+    effectsPingPong.dst->begin();
+    ofClear(0);
+    densityFilter.begin();
+    effectsPingPong.src->draw(0,0);
+    densityFilter.end();
+    effectsPingPong.dst->end();
+    effectsPingPong.swap();
 }
 
 //--------------------------------------------------------------
@@ -221,7 +239,7 @@ void ofApp::draw(){
     ofBackground(0);
     
     ofSetColor(255);
-    renderFBO.draw(0,0);
+    effectsPingPong.src->draw(0,0);
 }
 
 //--------------------------------------------------------------
