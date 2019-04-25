@@ -3,13 +3,14 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    particleSize = 0.5f;
+    particleSize = 1.0f;
     particleLife = 15.0f;
     velocityScale = 0.7f;
     timeStep = 0.005f;
-    numParticles = 1000000;
+    numParticles = 500000;
     dancerRadiusSquared = 50*50;
-    fractalScale = 0.006;
+    fractalScale = 0.007;
+    phase = 1;
     
     // Seting the textures where the information ( position and velocity ) will be
     textureRes = (int)sqrt((float)numParticles);
@@ -24,6 +25,9 @@ void ofApp::setup(){
     updateVel.load("passthru.vert", "velUpdate.frag");// shader for updating the texture that store the particles velocity on RG channels
     updateAge.load("passthru.vert", "ageUpdate.frag");// shader for updating the texture that store the particles velocity on R channel
     densityFilter.load("passthru.vert", "densityFilter.frag");
+    blurX.load("passthru.vert", "blurX.frag");
+    blurY.load("passthru.vert", "blurY.frag");
+    glowAdd.load("passthru.vert", "glowAdd.frag");
     
     // Frag, Vert and Geo shaders for the rendering process of the spark image
     updateRender.setGeometryInputType(GL_POINTS);
@@ -91,6 +95,7 @@ void ofApp::setup(){
     
     // Allocate the effects
     effectsPingPong.allocate(width, height, GL_RGB32F);
+    glowAddFBO.allocate(width, height, GL_RGB32F);
     
     // Create fractal noise map array values -1 : 1
     int fractalRes = width;
@@ -170,11 +175,12 @@ void ofApp::update(){
     updatePos.setUniformTexture("prevPosData", posPingPong.src->getTexture(), 0); // Previus position
     updatePos.setUniformTexture("origPosData", origPos.getTexture(), 1);  // passing the position information
     updatePos.setUniformTexture("velData", velPingPong.src->getTexture(), 2);  // Velocity
-    updatePos.setUniformTexture("ageData", agePingPong.src->getTexture(), 3);  // Velocity
-    updatePos.setUniformTexture("fractalData", fractal.getTexture(), 4);  // Velocity
+    updatePos.setUniformTexture("ageData", agePingPong.src->getTexture(), 3);  // Age
+    updatePos.setUniformTexture("fractalData", fractal.getTexture(), 4);  // Fractal
     updatePos.setUniform2f("screen", (float)width, (float)height);
     updatePos.setUniform1f("timestep", (float) timeStep);
     updatePos.setUniform1f("velocityScale", (float)velocityScale);
+    updatePos.setUniform1i("phase", (int)phase);
     
     // draw the source position texture to be updated
     posPingPong.src->draw(0, 0);
@@ -225,11 +231,45 @@ void ofApp::update(){
     effectsPingPong.src->end();
     
     // Apply effects
-    effectsPingPong.dst->begin();
+    effectsPingPong.dst->begin(); // Density effect
     ofClear(0);
     densityFilter.begin();
+    densityFilter.setUniformTexture("fractalData", fractal.getTexture(), 1);
+    densityFilter.setUniform1f("frameNum", (float)sin(ofGetFrameNum()));
     effectsPingPong.src->draw(0,0);
     densityFilter.end();
+    effectsPingPong.dst->end();
+    effectsPingPong.swap();
+
+    glowAddFBO.begin(); // Hold current frame in FBO for glow effect
+    ofClear(0);
+    effectsPingPong.src->draw(0,0);
+    glowAddFBO.end();
+
+    effectsPingPong.dst->begin(); // Blur X
+    ofClear(0);
+    blurX.begin();
+    blurX.setUniform1f("blurAmount", 8.0);
+    effectsPingPong.src->draw(0,0);
+    blurX.end();
+    effectsPingPong.dst->end();
+    effectsPingPong.swap();
+
+    effectsPingPong.dst->begin(); // Blur Y
+    ofClear(0);
+    blurY.begin();
+    blurY.setUniform1f("blurAmount", 8.0);
+    effectsPingPong.src->draw(0,0);
+    blurY.end();
+    effectsPingPong.dst->end();
+    effectsPingPong.swap();
+
+    effectsPingPong.dst->begin(); // Combine blur and stored renderFBO for glow
+    ofClear(0);
+    glowAdd.begin();
+    glowAdd.setUniformTexture("sharpTex", glowAddFBO.getTexture() , 1);
+    effectsPingPong.src->draw(0,0);
+    glowAdd.end();
     effectsPingPong.dst->end();
     effectsPingPong.swap();
 }
@@ -244,7 +284,13 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    
+    if (key == '1'){
+        phase = 1;
+        particleLife = 15.0f;
+    } else if (key == '2'){
+        phase = 2;
+        particleLife = 3.0f;
+    }
 }
 
 //--------------------------------------------------------------

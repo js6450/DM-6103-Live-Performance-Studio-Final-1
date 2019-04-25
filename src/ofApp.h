@@ -79,11 +79,15 @@ public:
     float particleLife;
     float particleSize;
     float fractalScale;
+    int phase;
     
     ofShader updatePos;
     ofShader updateVel;
     ofShader updateAge;
     ofShader densityFilter;
+    ofShader blurX;
+    ofShader blurY;
+    ofShader glowAdd;
     
     pingPongBuffer posPingPong;
     pingPongBuffer velPingPong;
@@ -94,6 +98,7 @@ public:
     ofFbo origVel;
     
     ofFbo fractal;
+    ofFbo glowAddFBO;
     
     ofImage particleImg;
     ofShader updateRender;
