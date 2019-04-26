@@ -6,7 +6,8 @@ int main(){
     
     ofGLWindowSettings settings;
     settings.setGLVersion(3, 2);
-    settings.windowMode = OF_FULLSCREEN;
+    settings.setSize(1024, 768);
+//    settings.windowMode = OF_FULLSCREEN;
     ofCreateWindow(settings);
     ofRunApp(new ofApp());
     

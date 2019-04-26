@@ -272,6 +272,7 @@ void ofApp::update(){
     // Live Effects
     dancerRadiusSquared = sin(ofGetFrameNum()*0.1)*20 + 40;
     dancerRadiusSquared *= dancerRadiusSquared;
+    frameWidth = sin(ofGetFrameNum()*0.1)*5 + 25;
     
     if (effectWindExplode){
         unsigned int f = ofGetFrameNum() - effectWindExplode;
