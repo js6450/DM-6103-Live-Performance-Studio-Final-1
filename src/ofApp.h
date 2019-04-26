@@ -79,7 +79,10 @@ public:
     float particleLife;
     float particleSize;
     float fractalScale;
+    float opposingVelocity;
     int phase;
+    
+    uint64 effectExplode = 0;
     
     ofShader updatePos;
     ofShader updateVel;

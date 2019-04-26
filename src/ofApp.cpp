@@ -6,6 +6,7 @@ void ofApp::setup(){
     particleSize = 1.0f;
     particleLife = 15.0f;
     velocityScale = 0.7f;
+    opposingVelocity = -0.5f; // Cool as -15.0
     timeStep = 0.005f;
     numParticles = 500000;
     dancerRadiusSquared = 50*50;
@@ -158,6 +159,7 @@ void ofApp::update(){
     updateVel.setUniform2f("mouse", (float)mouseX, (float)mouseY);
     updateVel.setUniform1f("dancerRadiusSquared", (float)dancerRadiusSquared);
     updateVel.setUniform1f("timestep", (float)timeStep);
+    updateVel.setUniform1f("opposingVelocity", (float)opposingVelocity);
     
     // draw the source velocity texture to be updated
     velPingPong.src->draw(0, 0);
@@ -272,6 +274,23 @@ void ofApp::update(){
     glowAdd.end();
     effectsPingPong.dst->end();
     effectsPingPong.swap();
+    
+    
+    
+    // Live Effects
+    dancerRadiusSquared = sin(ofGetFrameNum()*0.1)*20 + 40;
+    dancerRadiusSquared *= dancerRadiusSquared;
+    
+    if (effectExplode){
+        if (ofGetFrameNum() - effectExplode == 0){
+            phase = 2;
+            opposingVelocity = -30.0;
+        } else if (ofGetFrameNum() - effectExplode == 45){
+            phase = 1;
+            opposingVelocity = -0.5;
+            effectExplode = 0;
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -284,12 +303,26 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    // Phases
     if (key == '1'){
         phase = 1;
-        particleLife = 15.0f;
+//        particleLife = 15.0f;
     } else if (key == '2'){
         phase = 2;
-        particleLife = 3.0f;
+//        particleLife = 3.0f;
+    }
+    
+    // Effects
+    else if (key == 'q')
+        effectExplode = ofGetFrameNum();
+    
+    // Modifiers
+    else if (key == 'z'){
+        opposingVelocity = -0.5;
+    } else if (key == 'x'){
+        opposingVelocity = -15.0;
+    } else if (key == 'c'){
+        opposingVelocity = -30.0;
     }
 }
 

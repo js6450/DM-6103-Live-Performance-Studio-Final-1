@@ -7,6 +7,7 @@ uniform sampler2DRect ageData;
 
 uniform float timestep;
 uniform float dancerRadiusSquared;
+uniform float opposingVelocity;
 uniform vec2 screen;
 uniform vec2 mouse;
 
@@ -44,8 +45,8 @@ void main(void){
         if (force < 0) {
             vel.x = 0;
             vel.y = 0;
-            angle += PI/2;
-            force = -0.5;
+//            angle += PI/2;
+            force = opposingVelocity;
         }
         
         vel.x += cos(angle)*force;
