@@ -3,7 +3,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    particleSize = 1.0f;
+    particleSize = 1.5f;
     particleLife = 15.0f;
     velocityScale = 0.7f;
     opposingVelocity = -0.5f; // Cool as -15.0
@@ -322,7 +322,9 @@ void ofApp::keyPressed(int key){
     } else if (key == 'x'){
         opposingVelocity = -15.0;
     } else if (key == 'c'){
-        opposingVelocity = -30.0;
+        velocityScale = 0.7f;
+    } else if (key == 'v'){
+        velocityScale = -0.7f;
     }
 }
 
