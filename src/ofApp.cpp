@@ -1,16 +1,20 @@
 #include "ofApp.h"
-#include "FastNoiseSIMD.h"
 
 //--------------------------------------------------------------
+
+//
+// Note: there are computer specific settings for: OpenGL 3, SIMD 4.1, and Apple Clang
+//
+
 void ofApp::setup(){
     particleSize = 1.5f;
     particleLife = 15.0f;
     velocityScale = 0.7f;
     opposingVelocity = -0.5f; // Cool as -15.0
     timeStep = 0.005f;
-    numParticles = 500000;
+    numParticles = 500000; // Turn up as much as possible
     dancerRadiusSquared = 50*50;
-    fractalScale = 0.007;
+    frameWidth = 25;
     phase = 1;
     
     // Seting the textures where the information ( position and velocity ) will be
@@ -98,37 +102,23 @@ void ofApp::setup(){
     effectsPingPong.allocate(width, height, GL_RGB32F);
     glowAddFBO.allocate(width, height, GL_RGB32F);
     
+    // Create the frame mesh
+    
+    
     // Create fractal noise map array values -1 : 1
-    int fractalRes = width;
+    fractalRes = width;
     if (height > width) fractalRes = height;
-    
-    vector<float> fractalVec(fractalRes*fractalRes*3);
-    
-    FastNoiseSIMD* fractalNoise1 = FastNoiseSIMD::NewFastNoiseSIMD();
-    fractalNoise1->SetFrequency(fractalScale);
-    fractalNoise1->SetSeed(1000);
-    float* noiseSet1 = fractalNoise1->GetSimplexFractalSet(0, 0, 0, fractalRes, fractalRes, 1);
-    
-    FastNoiseSIMD* fractalNoise2 = FastNoiseSIMD::NewFastNoiseSIMD();
-    fractalNoise2->SetFrequency(fractalScale);
-    fractalNoise2->SetSeed(2000);
-    float* noiseSet2 = fractalNoise2->GetSimplexFractalSet(0, 0, 0, fractalRes, fractalRes, 1);
-    
-    for (int i = 0; i < fractalRes*fractalRes; i++){
-        fractalVec[i*3 + 0] = noiseSet1[i];
-        fractalVec[i*3 + 1] = noiseSet2[i];
-        fractalVec[i*3 + 2] = 0.0;
-    }
-    
-    FastNoiseSIMD::FreeNoiseSet(noiseSet1);
-    FastNoiseSIMD::FreeNoiseSet(noiseSet2);
-    
     fractal.allocate(fractalRes, fractalRes, GL_RGB32F);
-    fractal.getTexture().loadData(fractalVec.data(), fractalRes, fractalRes, GL_RGB);
+    fractalGenerator.setup(fractalRes); // Fractal is transferred to texture at start of update()
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    // Create new fractal on different thread
+    if (!fractalGenerator.isThreadRunning()){
+        fractal.getTexture().loadData(fractalGenerator.fractalVec->data(), fractalRes, fractalRes, GL_RGB);
+        fractalGenerator.startThread();
+    }
     
     // Ages PingPong
     agePingPong.dst->begin();
@@ -270,6 +260,8 @@ void ofApp::update(){
     ofClear(0);
     glowAdd.begin();
     glowAdd.setUniformTexture("sharpTex", glowAddFBO.getTexture() , 1);
+    glowAdd.setUniform2f("screen", (float)width, (float)height);
+    glowAdd.setUniform1i("frameWidth", frameWidth);
     effectsPingPong.src->draw(0,0);
     glowAdd.end();
     effectsPingPong.dst->end();
@@ -281,14 +273,24 @@ void ofApp::update(){
     dancerRadiusSquared = sin(ofGetFrameNum()*0.1)*20 + 40;
     dancerRadiusSquared *= dancerRadiusSquared;
     
-    if (effectExplode){
-        if (ofGetFrameNum() - effectExplode == 0){
+    if (effectWindExplode){
+        unsigned int f = ofGetFrameNum() - effectWindExplode;
+        if (f == 0){
             phase = 2;
             opposingVelocity = -30.0;
-        } else if (ofGetFrameNum() - effectExplode == 45){
+        } else if (f == 45){
             phase = 1;
             opposingVelocity = -0.5;
-            effectExplode = 0;
+            effectWindExplode = 0;
+        }
+    }
+    if (effectQuickExplode){
+        unsigned int f = ofGetFrameNum() - effectQuickExplode;
+        if (f == 0){
+            opposingVelocity = -15.0;
+        } else if (f == 5){
+            opposingVelocity = -0.5;
+            effectQuickExplode = 0;
         }
     }
 }
@@ -314,7 +316,9 @@ void ofApp::keyPressed(int key){
     
     // Effects
     else if (key == 'q')
-        effectExplode = ofGetFrameNum();
+        effectWindExplode = ofGetFrameNum();
+    else if (key == 'w')
+        effectQuickExplode = ofGetFrameNum();
     
     // Modifiers
     else if (key == 'z'){

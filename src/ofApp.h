@@ -1,18 +1,49 @@
-/*
- *  summary:Example of how to use GPU for data processing. The data it«s going to be stored
- *          on the color channels of the FBO«s textures. In this case we are going to use just
- *          RED and GREEN channels on two textures. One for the position and the other one for
- *          the velocity. For updating the information of those textures we are going to use
- *          two FBO«s for each type of information. This pair of FBO will pass the information
- *          from one to other in a technique called PingPong.
- *          After updating this information, we are going to use the textures allocated on GPU memory
- *          for moving some vertex and then multiplied them in order to make little frames that hold
- *          a texture of a spark of light.
- */
-
 #pragma once
 
 #include "ofMain.h"
+#include "FastNoiseSIMD.h"
+
+class fractalGenerationThread : public ofThread{
+public:
+    void setup(int res){
+        fractalRes = res;
+        fractalVec = new vector<float>(fractalRes*fractalRes*3);
+        
+        fractalNoise1 = FastNoiseSIMD::NewFastNoiseSIMD();
+        fractalNoise1->SetFrequency(fractalScale);
+        fractalNoise1->SetSeed(1000);
+        
+        fractalNoise2 = FastNoiseSIMD::NewFastNoiseSIMD();
+        fractalNoise2->SetFrequency(fractalScale);
+        fractalNoise2->SetSeed(2000);
+        
+        threadedFunction();
+    }
+    
+    void threadedFunction(){
+        float* noiseSet1 = fractalNoise1->GetValueFractalSet(0, 0, z, fractalRes, fractalRes, 1);
+        float* noiseSet2 = fractalNoise2->GetValueFractalSet(0, 0, z, fractalRes, fractalRes, 1);
+        
+        for (int i = 0; i < fractalRes*fractalRes; i++){
+            (*fractalVec)[i*3 + 0] = noiseSet1[i];
+            (*fractalVec)[i*3 + 1] = noiseSet2[i];
+            (*fractalVec)[i*3 + 2] = 0.0;
+        }
+        
+        FastNoiseSIMD::FreeNoiseSet(noiseSet1);
+        FastNoiseSIMD::FreeNoiseSet(noiseSet2);
+        
+        z += 10;
+    }
+    
+    FastNoiseSIMD* fractalNoise1;
+    FastNoiseSIMD* fractalNoise2;
+    
+    uint64 z = 0;
+    float fractalScale = 0.01;
+    int fractalRes;
+    vector<float>* fractalVec;
+};
 
 struct pingPongBuffer {
 public:
@@ -70,19 +101,23 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    fractalGenerationThread fractalGenerator;
+    
     int width, height;
     int numParticles;
     int textureRes;
+    int fractalRes;
+    int frameWidth;
     float dancerRadiusSquared;
     float timeStep;
     float velocityScale;
     float particleLife;
     float particleSize;
-    float fractalScale;
     float opposingVelocity;
     int phase;
     
-    uint64 effectExplode = 0;
+    uint64 effectWindExplode = 0;
+    uint64 effectQuickExplode = 0;
     
     ofShader updatePos;
     ofShader updateVel;
@@ -107,4 +142,6 @@ public:
     ofShader updateRender;
     ofFbo renderFBO;
     ofVboMesh mesh;
+    
+    ofVbo frame;
 };

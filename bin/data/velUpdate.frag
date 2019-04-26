@@ -49,7 +49,7 @@ void main(void){
             force = opposingVelocity;
         }
         
-        vel.x += cos(angle)*force;
+        vel.x += cos(angle)*force*screen.y/screen.x;
         vel.y += sin(angle)*force;
         
         // Air resistance
