@@ -107,14 +107,13 @@ void ofApp::setup(){
     effectsPingPong.allocate(width, height, GL_RGB32F);
     glowAddFBO.allocate(width, height, GL_RGB32F);
     
-    // Create the frame mesh
-    
     
     // Create fractal noise map array values -1 : 1
     fractalRes = width;
     if (height > width) fractalRes = height;
     fractal.allocate(fractalRes, fractalRes, GL_RGB32F);
-    fractalGenerator.setup(fractalRes); // Fractal is transferred to texture at start of update()
+    fractalGenerator.setup(fractalRes);
+    fractalGenerator.startThread();
 }
 
 //--------------------------------------------------------------

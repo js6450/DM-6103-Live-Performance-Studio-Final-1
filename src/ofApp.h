@@ -16,8 +16,6 @@ public:
         fractalNoise2 = FastNoiseSIMD::NewFastNoiseSIMD();
         fractalNoise2->SetFrequency(fractalScale);
         fractalNoise2->SetSeed(2000);
-        
-        threadedFunction();
     }
     
     void threadedFunction(){
