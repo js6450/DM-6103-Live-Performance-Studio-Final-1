@@ -7,23 +7,28 @@
 //
 
 void ofApp::setup(){
+    // Width and Heigth of the windows
+    width = ofGetWindowWidth();
+    height = ofGetWindowHeight()*2;
+    frameMesh.setUsage(GL_DYNAMIC_DRAW);
+    
+    // Set variables
     particleSize = 1.5f;
     particleLife = 15.0f;
-    velocityScale = 0.7f;
-    opposingVelocity = -0.5f; // Cool as -15.0
+    velocityScaleConst = 0.45f; // 0.7f on mine, 0.45f on live
+    opposingVelocityConst = -25.0f; // 30.0f on mine, 25.0f on live
     timeStep = 0.005f;
-    numParticles = 500000; // Turn up as much as possible
-    dancerRadiusSquared = 50*50;
+    numParticles = 200000; // Turn up as much as possible, 500000 decent
+    dancerRadiusSquared = 50*50; // Controlled somewhere else
     frameWidth = 25;
     phase = 1;
+    
+    velocityScale = velocityScaleConst;
+    opposingVelocity = opposingVelocityConst/60.0;
     
     // Seting the textures where the information ( position and velocity ) will be
     textureRes = (int)sqrt((float)numParticles);
     numParticles = textureRes * textureRes;
-    
-    // Width and Heigth of the windows
-    width = ofGetWindowWidth();
-    height = ofGetWindowHeight();
     
     // Loading the Shaders
     updatePos.load("passthru.vert", "posUpdate.frag");// shader for updating the texture that store the particles position on RG channels
@@ -114,6 +119,10 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    // Map coordinates
+    posX = mouseX;
+    posY = mouseY + height/2;
+    
     // Create new fractal on different thread
     if (!fractalGenerator.isThreadRunning()){
         fractal.getTexture().loadData(fractalGenerator.fractalVec->data(), fractalRes, fractalRes, GL_RGB);
@@ -146,7 +155,7 @@ void ofApp::update(){
     updateVel.setUniformTexture("posData", posPingPong.src->getTexture(), 2);  // passing the position information
     updateVel.setUniformTexture("ageData", agePingPong.src->getTexture(), 3);  // passing the position information
     updateVel.setUniform2f("screen", (float)width, (float)height);
-    updateVel.setUniform2f("mouse", (float)mouseX, (float)mouseY);
+    updateVel.setUniform2f("mouse", (float)posX, (float)posY);
     updateVel.setUniform1f("dancerRadiusSquared", (float)dancerRadiusSquared);
     updateVel.setUniform1f("timestep", (float)timeStep);
     updateVel.setUniform1f("opposingVelocity", (float)opposingVelocity);
@@ -233,39 +242,37 @@ void ofApp::update(){
     effectsPingPong.dst->end();
     effectsPingPong.swap();
 
-    glowAddFBO.begin(); // Hold current frame in FBO for glow effect
-    ofClear(0);
-    effectsPingPong.src->draw(0,0);
-    glowAddFBO.end();
-
-    effectsPingPong.dst->begin(); // Blur X
-    ofClear(0);
-    blurX.begin();
-    blurX.setUniform1f("blurAmount", 8.0);
-    effectsPingPong.src->draw(0,0);
-    blurX.end();
-    effectsPingPong.dst->end();
-    effectsPingPong.swap();
-
-    effectsPingPong.dst->begin(); // Blur Y
-    ofClear(0);
-    blurY.begin();
-    blurY.setUniform1f("blurAmount", 8.0);
-    effectsPingPong.src->draw(0,0);
-    blurY.end();
-    effectsPingPong.dst->end();
-    effectsPingPong.swap();
-
-    effectsPingPong.dst->begin(); // Combine blur and stored renderFBO for glow
-    ofClear(0);
-    glowAdd.begin();
-    glowAdd.setUniformTexture("sharpTex", glowAddFBO.getTexture() , 1);
-    glowAdd.setUniform2f("screen", (float)width, (float)height);
-    glowAdd.setUniform1i("frameWidth", frameWidth);
-    effectsPingPong.src->draw(0,0);
-    glowAdd.end();
-    effectsPingPong.dst->end();
-    effectsPingPong.swap();
+//    glowAddFBO.begin(); // Hold current frame in FBO for glow effect
+//    ofClear(0);
+//    effectsPingPong.src->draw(0,0);
+//    glowAddFBO.end();
+//
+//    effectsPingPong.dst->begin(); // Blur X
+//    ofClear(0);
+//    blurX.begin();
+//    blurX.setUniform1f("blurAmount", 8.0);
+//    effectsPingPong.src->draw(0,0);
+//    blurX.end();
+//    effectsPingPong.dst->end();
+//    effectsPingPong.swap();
+//
+//    effectsPingPong.dst->begin(); // Blur Y
+//    ofClear(0);
+//    blurY.begin();
+//    blurY.setUniform1f("blurAmount", 8.0);
+//    effectsPingPong.src->draw(0,0);
+//    blurY.end();
+//    effectsPingPong.dst->end();
+//    effectsPingPong.swap();
+//
+//    effectsPingPong.dst->begin(); // Combine blur and stored renderFBO for glow
+//    ofClear(0);
+//    glowAdd.begin();
+//    glowAdd.setUniformTexture("sharpTex", glowAddFBO.getTexture() , 1);
+//    effectsPingPong.src->draw(0,0);
+//    glowAdd.end();
+//    effectsPingPong.dst->end();
+//    effectsPingPong.swap();
     
     
     
@@ -278,19 +285,19 @@ void ofApp::update(){
         unsigned int f = ofGetFrameNum() - effectWindExplode;
         if (f == 0){
             phase = 2;
-            opposingVelocity = -30.0;
+            opposingVelocity = -opposingVelocityConst;
         } else if (f == 45){
             phase = 1;
-            opposingVelocity = -0.5;
+            opposingVelocity = -0.5f;
             effectWindExplode = 0;
         }
     }
     if (effectQuickExplode){
         unsigned int f = ofGetFrameNum() - effectQuickExplode;
         if (f == 0){
-            opposingVelocity = -15.0;
+            opposingVelocity = -opposingVelocityConst/2.0;
         } else if (f == 5){
-            opposingVelocity = -0.5;
+            opposingVelocity = -0.5f;
             effectQuickExplode = 0;
         }
     }
@@ -300,8 +307,65 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
-    ofSetColor(255);
-    effectsPingPong.src->draw(0,0);
+    effectsPingPong.src->getTexture().drawSubsection(0,0,width,height/2,0,height/2);
+    
+    int fWidth = ofGetWindowWidth();
+    int fHeight = ofGetWindowHeight();
+    frameMesh.clear();
+    frameMesh.setMode(OF_PRIMITIVE_TRIANGLES);
+    
+    frameMesh.addVertex(ofVec3f(0, 0, 0));
+    frameMesh.addVertex(ofVec3f(fWidth, 0, 0));
+    frameMesh.addVertex(ofVec3f(fWidth, fHeight, 0));
+    frameMesh.addVertex(ofVec3f(0, fHeight, 0));
+    
+    frameMesh.addVertex(ofVec3f(frameWidth, frameWidth, 0));
+    frameMesh.addVertex(ofVec3f(fWidth-frameWidth, frameWidth, 0));
+    frameMesh.addVertex(ofVec3f(fWidth-frameWidth, fHeight-frameWidth, 0));
+    frameMesh.addVertex(ofVec3f(frameWidth, fHeight-frameWidth, 0));
+    
+    frameMesh.addColor(ofColor::white);
+    frameMesh.addColor(ofColor::white);
+    frameMesh.addColor(ofColor::white);
+    frameMesh.addColor(ofColor::white);
+    frameMesh.addColor(ofColor::white);
+    frameMesh.addColor(ofColor::white);
+    frameMesh.addColor(ofColor::white);
+    frameMesh.addColor(ofColor::white);
+    
+    frameMesh.addIndex(0);
+    frameMesh.addIndex(1);
+    frameMesh.addIndex(4);
+    
+    frameMesh.addIndex(4);
+    frameMesh.addIndex(1);
+    frameMesh.addIndex(5);
+    
+    frameMesh.addIndex(1);
+    frameMesh.addIndex(2);
+    frameMesh.addIndex(5);
+    
+    frameMesh.addIndex(5);
+    frameMesh.addIndex(2);
+    frameMesh.addIndex(6);
+    
+    frameMesh.addIndex(2);
+    frameMesh.addIndex(3);
+    frameMesh.addIndex(6);
+    
+    frameMesh.addIndex(6);
+    frameMesh.addIndex(3);
+    frameMesh.addIndex(7);
+    
+    frameMesh.addIndex(3);
+    frameMesh.addIndex(0);
+    frameMesh.addIndex(7);
+    
+    frameMesh.addIndex(7);
+    frameMesh.addIndex(0);
+    frameMesh.addIndex(4);
+    
+    frameMesh.draw();
 }
 
 //--------------------------------------------------------------
@@ -323,13 +387,13 @@ void ofApp::keyPressed(int key){
     
     // Modifiers
     else if (key == 'z'){
-        opposingVelocity = -0.5;
+        opposingVelocity = -0.5f;
     } else if (key == 'x'){
-        opposingVelocity = -15.0;
+        opposingVelocity = -opposingVelocityConst/2.0;
     } else if (key == 'c'){
-        velocityScale = 0.7f;
+        velocityScale = velocityScaleConst;
     } else if (key == 'v'){
-        velocityScale = -0.7f;
+        velocityScale = -velocityScaleConst;
     }
 }
 

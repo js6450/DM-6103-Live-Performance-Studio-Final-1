@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
+		E7216BA5227BAF2C00ABDA1D /* ofSecond.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7216BA4227BAF2C00ABDA1D /* ofSecond.cpp */; };
 		E72DB4E3226C865A00B06FA7 /* FastNoiseSIMD_sse2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E72DB4DA226C865A00B06FA7 /* FastNoiseSIMD_sse2.cpp */; settings = {COMPILER_FLAGS = "-msse2"; }; };
 		E72DB4E4226C865A00B06FA7 /* FastNoiseSIMD_sse41.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E72DB4DB226C865A00B06FA7 /* FastNoiseSIMD_sse41.cpp */; settings = {COMPILER_FLAGS = "-msse4.1"; }; };
 		E72DB4E5226C865A00B06FA7 /* FastNoiseSIMD_avx512.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E72DB4DC226C865A00B06FA7 /* FastNoiseSIMD_avx512.cpp */; settings = {COMPILER_FLAGS = "-mavx512f"; }; };
@@ -212,6 +213,8 @@
 		E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofApp.h; path = src/ofApp.h; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E7216BA3227BAF2C00ABDA1D /* ofSecond.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofSecond.h; sourceTree = "<group>"; };
+		E7216BA4227BAF2C00ABDA1D /* ofSecond.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofSecond.cpp; sourceTree = "<group>"; };
 		E72DB4D8226C861800B06FA7 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = "<group>"; };
 		E72DB4DA226C865A00B06FA7 /* FastNoiseSIMD_sse2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FastNoiseSIMD_sse2.cpp; sourceTree = "<group>"; };
 		E72DB4DB226C865A00B06FA7 /* FastNoiseSIMD_sse41.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FastNoiseSIMD_sse41.cpp; sourceTree = "<group>"; };
@@ -549,8 +552,10 @@
 			isa = PBXGroup;
 			children = (
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
-				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
+				E7216BA3227BAF2C00ABDA1D /* ofSecond.h */,
+				E7216BA4227BAF2C00ABDA1D /* ofSecond.cpp */,
 				E72DB4D9226C865A00B06FA7 /* FastNoiseSIMD */,
 			);
 			path = src;
@@ -678,6 +683,7 @@
 				E72DB4E3226C865A00B06FA7 /* FastNoiseSIMD_sse2.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
+				E7216BA5227BAF2C00ABDA1D /* ofSecond.cpp in Sources */,
 				E72DB4E8226C865A00B06FA7 /* FastNoiseSIMD_neon.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

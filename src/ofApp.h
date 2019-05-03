@@ -104,6 +104,7 @@ public:
     fractalGenerationThread fractalGenerator;
     
     int width, height;
+    int posX, posY;
     int numParticles;
     int textureRes;
     int fractalRes;
@@ -115,6 +116,9 @@ public:
     float particleSize;
     float opposingVelocity;
     int phase;
+    
+    float velocityScaleConst;
+    float opposingVelocityConst;
     
     uint64 effectWindExplode = 0;
     uint64 effectQuickExplode = 0;
@@ -143,5 +147,5 @@ public:
     ofFbo renderFBO;
     ofVboMesh mesh;
     
-    ofVbo frame;
+    ofVboMesh frameMesh;
 };
