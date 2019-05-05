@@ -6,6 +6,7 @@ uniform sampler2DRect posData;
 uniform sampler2DRect ageData;
 
 uniform int phase;
+uniform int attractToggle;
 uniform float timestep;
 uniform float dancerRadiusSquared;
 uniform float opposingVelocity;
@@ -21,7 +22,7 @@ const float PI = 3.1415926535897932384626433832795;
 void main(void){
     
     float dancerRad = dancerRadiusSquared;
-    if (phase == 3) dancerRad /= 5;
+    if (phase == 3) dancerRad /= 16;
     
     // Get the position and velocity from the pixel color.
     vec2 pos = texture( posData, vTexCoord).rg;
@@ -54,6 +55,8 @@ void main(void){
                 force = opposingVelocity*5;
             }
         } else{
+            if (phase == 2) force *= 2;
+            
             if (force > 1) force = 1;
             if (force < 0) {
                 vel.x = 0;
@@ -63,8 +66,10 @@ void main(void){
             }
         }
         
-        vel.x += cos(angle)*force*screen.y/screen.x;
-        vel.y += sin(angle)*force;
+        if (attractToggle == 1){
+            vel.x += cos(angle)*force*screen.y/screen.x;
+            vel.y += sin(angle)*force;
+        }
         
         // Air resistance
         vel -= vel * 0.01;

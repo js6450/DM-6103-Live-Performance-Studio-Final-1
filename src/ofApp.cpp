@@ -22,6 +22,7 @@ void ofApp::setup(){
     dancerRadiusSquared = 50*50; // Controlled somewhere else
     frameWidth = 25;
     phase = 1;
+    attractToggle = true;
     
     velocityScale = velocityScaleConst;
     opposingVelocity = opposingVelocityConst/60.0;
@@ -159,6 +160,7 @@ void ofApp::update(){
     updateVel.setUniform1f("timestep", (float)timeStep);
     updateVel.setUniform1f("opposingVelocity", (float)opposingVelocity);
     updateVel.setUniform1i("phase", (int)phase);
+    updateVel.setUniform1i("attractToggle", (int)attractToggle);
     
     // draw the source velocity texture to be updated
     velPingPong.src->draw(0, 0);
@@ -396,6 +398,10 @@ void ofApp::keyPressed(int key){
         velocityScale = velocityScaleConst;
     } else if (key == 'v'){
         velocityScale = -velocityScaleConst;
+    } else if (key == 'b'){
+        attractToggle = true;
+    } else if (key == 'n'){
+        attractToggle = false;
     }
 }
 

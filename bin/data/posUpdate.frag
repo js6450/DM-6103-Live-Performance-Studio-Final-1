@@ -33,14 +33,19 @@ void main(void){
         if (pos.x > 0.0 && pos.x < 1.0 && pos.y > 0.0 && pos.y < 1.0){
             fractal = texture( fractalData, vec2(pos.x*screen.x,pos.y*screen.y) ).rg;
             
-            if (phase == 1){ // For phase 2 do not engage this if statement and perhaps decrease life
-                fractal += 1; // Maps 0-2
-                fractal *= 0.5; // Maps 0-1
-                fractal += 0.5; // Should be 1-above to center around 1. Now: 0.5-1.5
-            }
+//            if (phase == 3){ // For phase 2 do not engage this if statement and perhaps decrease life
+//                fractal += 1; // Maps 0-2
+//                fractal *= 0.5; // Maps 0-1
+//                fractal += 0.5; // Should be 1-above to center around 1. Now: 0.5-1.5
+//            }
+            
         }
         
-        pos += vel * fractal * timestep * velocityScale;
+        if (phase == 1) {
+            pos += vel * timestep * velocityScale;
+        } else{
+            pos += vel * fractal * timestep * velocityScale;
+        }
         
     }
     

@@ -114,6 +114,7 @@ public:
     float particleSize;
     float opposingVelocity;
     int phase;
+    bool attractToggle;
     
     float velocityScaleConst;
     float opposingVelocityConst;
