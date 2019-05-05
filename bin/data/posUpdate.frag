@@ -22,6 +22,7 @@ void main(void){
     vec2 vel = texture( velData, vTexCoord ).rg;
     float age = texture( ageData, vTexCoord ).r;
     
+    
     // Update the position.
     if (age < timestep){
         pos = origPos;

@@ -15,10 +15,10 @@ void ofApp::setup(){
     // Set variables
     particleSize = 1.5f;
     particleLife = 15.0f;
-    velocityScaleConst = 0.45f; // 0.7f on mine, 0.45f on live
-    opposingVelocityConst = -25.0f; // 30.0f on mine, 25.0f on live
+    velocityScaleConst = 0.7f; // 0.7f on mine, 0.45f on live
+    opposingVelocityConst = -30.0f; // 30.0f on mine, 25.0f on live
     timeStep = 0.005f;
-    numParticles = 200000; // Turn up as much as possible, 500000 decent
+    numParticles = 200000; // Turn up as much as possible, 500000 decent, comment in AVX on FastNoiseSIMD.h if possible
     dancerRadiusSquared = 50*50; // Controlled somewhere else
     frameWidth = 25;
     phase = 1;
@@ -158,6 +158,7 @@ void ofApp::update(){
     updateVel.setUniform1f("dancerRadiusSquared", (float)dancerRadiusSquared);
     updateVel.setUniform1f("timestep", (float)timeStep);
     updateVel.setUniform1f("opposingVelocity", (float)opposingVelocity);
+    updateVel.setUniform1i("phase", (int)phase);
     
     // draw the source velocity texture to be updated
     velPingPong.src->draw(0, 0);
@@ -376,6 +377,8 @@ void ofApp::keyPressed(int key){
     } else if (key == '2'){
         phase = 2;
 //        particleLife = 3.0f;
+    } else if (key == '3'){
+        phase = 3;
     }
     
     // Effects

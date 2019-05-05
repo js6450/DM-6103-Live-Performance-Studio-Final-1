@@ -5,6 +5,7 @@ uniform sampler2DRect origVelData;
 uniform sampler2DRect posData;
 uniform sampler2DRect ageData;
 
+uniform int phase;
 uniform float timestep;
 uniform float dancerRadiusSquared;
 uniform float opposingVelocity;
@@ -18,6 +19,9 @@ out vec4 vFragColor;
 const float PI = 3.1415926535897932384626433832795;
     
 void main(void){
+    
+    float dancerRad = dancerRadiusSquared;
+    if (phase == 3) dancerRad /= 5;
     
     // Get the position and velocity from the pixel color.
     vec2 pos = texture( posData, vTexCoord).rg;
@@ -39,14 +43,24 @@ void main(void){
         float angle = atan( (mouse.y-posY)/(mouse.x-posX) );
         if (mouse.x < posX) angle += PI;
         
-        float force = 50000/(distX*distX + distY*distY - dancerRadiusSquared);
+        float force = 50000/(distX*distX + distY*distY - dancerRad);
         
-        if (force > 1) force = 1;
-        if (force < 0) {
-            vel.x = 0;
-            vel.y = 0;
-//            angle += PI/2;
-            force = opposingVelocity;
+        if (phase == 3){
+            if (force > 0) force = 0;
+            if (force < 0) {
+                vel.x = 0;
+                vel.y = 0;
+                //            angle += PI/2;
+                force = opposingVelocity*5;
+            }
+        } else{
+            if (force > 1) force = 1;
+            if (force < 0) {
+                vel.x = 0;
+                vel.y = 0;
+                //            angle += PI/2;
+                force = opposingVelocity;
+            }
         }
         
         vel.x += cos(angle)*force*screen.y/screen.x;
