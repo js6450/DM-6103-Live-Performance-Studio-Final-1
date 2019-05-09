@@ -4,6 +4,7 @@ uniform sampler2DRect prevAgeData;
 
 uniform float timestep;
 uniform float life;
+uniform int phase;
 
 in vec2 vTexCoord;
 
@@ -11,14 +12,21 @@ out vec4 vFragColor;
 
 void main(void){
     // Get the age from the pixel color.
-    float age = texture( prevAgeData, vTexCoord ).r;
+    float trueAge = texture( prevAgeData, vTexCoord ).g;
     
     // Update the age
-    age += timestep;
-    if (age > life)
-        age = 0.0;
+    trueAge += timestep;
+    if (trueAge > life)
+        trueAge = 0.0;
+    
+    float age = trueAge;
+    
+    // Calculate alternative ages
+    if (phase == 2){
+        age = int(trueAge/timestep)%30*timestep;
+    }
     
     // And finally store it on the position FBO.
-    vFragColor = vec4(age,1.0,1.0,1.0);
+    vFragColor = vec4(age,trueAge,1.0,1.0);
 }
 

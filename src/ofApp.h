@@ -121,9 +121,13 @@ public:
     float velocityScaleConst;
     float opposingVelocityConst;
     
+    float sThresh[4];
+    uint32 sColor[4];
+    
     uint64 effectWindExplode = 0;
     uint64 effectQuickExplode = 0;
     uint64 effectQuickExplodeFractal = 0;
+    uint64 xDistort = 0;
     
     ofShader updatePos;
     ofShader updateVel;

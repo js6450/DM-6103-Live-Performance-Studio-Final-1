@@ -6,6 +6,15 @@ uniform sampler2DRect fractalData;
 uniform float blurAmount;
 uniform float frameNum;
 
+uniform float thresh1;
+uniform float thresh2;
+uniform float thresh3;
+uniform float thresh4;
+uniform vec4 color1;
+uniform vec4 color2;
+uniform vec4 color3;
+uniform vec4 color4;
+
 in vec2 vTexCoord;
 out vec4 outputColor;
 
@@ -15,50 +24,43 @@ void main()
     vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
     
     float surrounding =
-        texture(tex0, vTexCoord + vec2( 1.0,  1.0)).r +
-        texture(tex0, vTexCoord + vec2( 1.0,  0.0)).r +
-        texture(tex0, vTexCoord + vec2( 1.0, -1.0)).r +
-        texture(tex0, vTexCoord + vec2( 0.0, -1.0)).r +
-        texture(tex0, vTexCoord + vec2(-1.0, -1.0)).r +
-        texture(tex0, vTexCoord + vec2(-1.0,  0.0)).r +
-        texture(tex0, vTexCoord + vec2(-1.0,  1.0)).r +
-        texture(tex0, vTexCoord + vec2( 0.0,  1.0)).r
+        texture(tex0, vTexCoord + vec2( 0.0,  0.0)).r * 0.150342
+        +
+        texture(tex0, vTexCoord + vec2( 1.0,  1.0)).r * 0.059912 +
+        texture(tex0, vTexCoord + vec2( 1.0,  0.0)).r * 0.094907 +
+        texture(tex0, vTexCoord + vec2( 1.0, -1.0)).r * 0.059912 +
+        texture(tex0, vTexCoord + vec2( 0.0, -1.0)).r * 0.094907 +
+        texture(tex0, vTexCoord + vec2(-1.0, -1.0)).r * 0.059912 +
+        texture(tex0, vTexCoord + vec2(-1.0,  0.0)).r * 0.094907 +
+        texture(tex0, vTexCoord + vec2(-1.0,  1.0)).r * 0.059912 +
+        texture(tex0, vTexCoord + vec2( 0.0,  1.0)).r * 0.094907
+        +
+        texture(tex0, vTexCoord + vec2( 2.0,  2.0)).r * 0.003765 +
+        texture(tex0, vTexCoord + vec2( 2.0,  1.0)).r * 0.015019 +
+        texture(tex0, vTexCoord + vec2( 2.0,  0.0)).r * 0.023792 +
+        texture(tex0, vTexCoord + vec2( 2.0, -1.0)).r * 0.015019 +
+        texture(tex0, vTexCoord + vec2( 2.0, -2.0)).r * 0.003765 +
+        texture(tex0, vTexCoord + vec2( 1.0, -2.0)).r * 0.015019 +
+        texture(tex0, vTexCoord + vec2( 0.0, -2.0)).r * 0.023792 +
+        texture(tex0, vTexCoord + vec2(-1.0, -2.0)).r * 0.015019 +
+        texture(tex0, vTexCoord + vec2(-2.0, -2.0)).r * 0.003765 +
+        texture(tex0, vTexCoord + vec2(-2.0, -1.0)).r * 0.015019 +
+        texture(tex0, vTexCoord + vec2(-2.0,  0.0)).r * 0.023792 +
+        texture(tex0, vTexCoord + vec2(-2.0,  1.0)).r * 0.015019 +
+        texture(tex0, vTexCoord + vec2(-2.0,  2.0)).r * 0.003765 +
+        texture(tex0, vTexCoord + vec2(-1.0,  2.0)).r * 0.015019 +
+        texture(tex0, vTexCoord + vec2( 0.0,  2.0)).r * 0.023792 +
+        texture(tex0, vTexCoord + vec2( 1.0,  2.0)).r * 0.015019
+        ;
     
-//        + texture(tex0, vTexCoord + vec2( 2.0,  2.0)).r +
-//        texture(tex0, vTexCoord + vec2( 2.0,  1.0)).r +
-//        texture(tex0, vTexCoord + vec2( 2.0,  0.0)).r +
-//        texture(tex0, vTexCoord + vec2( 2.0, -1.0)).r +
-//        texture(tex0, vTexCoord + vec2( 2.0, -2.0)).r +
-//        texture(tex0, vTexCoord + vec2( 1.0, -2.0)).r +
-//        texture(tex0, vTexCoord + vec2( 0.0, -2.0)).r +
-//        texture(tex0, vTexCoord + vec2(-1.0, -2.0)).r +
-//        texture(tex0, vTexCoord + vec2(-2.0, -2.0)).r +
-//        texture(tex0, vTexCoord + vec2(-2.0, -1.0)).r +
-//        texture(tex0, vTexCoord + vec2(-2.0,  0.0)).r +
-//        texture(tex0, vTexCoord + vec2(-2.0,  1.0)).r +
-//        texture(tex0, vTexCoord + vec2(-2.0,  2.0)).r +
-//        texture(tex0, vTexCoord + vec2(-1.0,  2.0)).r +
-//        texture(tex0, vTexCoord + vec2( 0.0,  2.0)).r +
-//        texture(tex0, vTexCoord + vec2( 1.0,  2.0)).r
-    ;
-    
-//    if (surrounding > 23)
-//        color = vec4(1.0, 1.0, 1.0, 1.0);
-//    else if (surrounding > 6)
-//        color = vec4(0xFC/255.0, 0xEC/255.0, 0xA3/255.0, 1.0);
-//    else if (surrounding > 1.5)
-//        color = vec4(0xA1/255.0, 0x3B/255.0, 0x4F/255.0, 1.0);
-//    else if (surrounding > 0.4)
-//        color = vec4(0x18/255.0, 0x1F/255.0, 0x54/255.0, 1.0);
-    
-    if (surrounding > 7.7)
-        color = vec4(1.0, 1.0, 1.0, 1.0);
-    else if (surrounding > 4)
-        color = vec4(0xFC/255.0, 0xEC/255.0, 0xA3/255.0, 1.0);
-    else if (surrounding > 0.8)
-        color = vec4(0xA1/255.0, 0x3B/255.0, 0x4F/255.0, 1.0);
-    else if (surrounding > 0.15)
-        color = vec4(0x18/255.0, 0x1F/255.0, 0x54/255.0, 1.0);
+    if (surrounding > thresh1)
+        color = color1;
+    else if (surrounding > thresh2)
+        color = color2;
+    else if (surrounding > thresh3)
+        color = color3;
+    else if (surrounding > thresh4)
+        color = color4;
     
 //    color.a = (texture(fractalData, vTexCoord).r + 1.0)* 3.0 * (frameNum+1);
     

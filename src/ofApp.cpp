@@ -13,11 +13,11 @@ void ofApp::setup(){
     frameMesh.setUsage(GL_DYNAMIC_DRAW);
     
     // Set variables
-    beat = 154/4/4; // Bpm divided by measures/min divided by beats/measure
+    beat = 5; // Bpm divided by measures/min divided by beats/measure?
     particleSize = 1.5f;
     particleLife = 15.0f;
-    velocityScaleConst = 0.7f; // Adjust for speed ( 0.45f on live )
-    opposingVelocityConst = -25.0f; // Adjust so effects work properly ( 25.0f on live )
+    velocityScaleConst = 0.5f; // Adjust for speed ( 0.45f on live )
+    opposingVelocityConst = -30.0f; // Adjust so effects work properly ( 25.0f on live )
     timeStep = 0.005f;
     numParticles = 200000; // Turn up as much as possible, 500000 decent, comment in AVX on FastNoiseSIMD.h if possible
     dancerRadiusSquared = 100*100; // Controlled somewhere else
@@ -29,6 +29,17 @@ void ofApp::setup(){
     beat = beat*M_PI/360;
     velocityScale = velocityScaleConst;
     opposingVelocity = opposingVelocityConst/60.0;
+    
+    // Set default colors
+    sThresh[0] = 0.9625;
+    sThresh[1] = 0.5;
+    sThresh[2] = 0.1;
+    sThresh[3] = 0.01875;
+    
+    sColor[0] = 0xFFFFFF;
+    sColor[1] = 0xFCECA3;
+    sColor[2] = 0xA13B4F;
+    sColor[3] = 0x181F54;
     
     // Seting the textures where the information ( position and velocity ) will be
     textureRes = (int)sqrt((float)numParticles);
@@ -82,9 +93,10 @@ void ofApp::setup(){
     // 3. Making arrays of float pixels with age information and the load it to a texture
     vector<float> age(numParticles*3);
     for (int i = 0; i < numParticles; i++){
-        age[i*3 + 0] = 1.0*i/numParticles*(particleLife+timeStep) - timeStep;
-        age[i*3 + 1] = 1.0;
-        age[i*3 + 2] = 1.0;
+        float a = 1.0*i/numParticles*(particleLife+timeStep) - timeStep;
+        age[i*3 + 0] = a;
+        age[i*3 + 1] = a;
+        age[i*3 + 2] = a;
     }
     // Load this information in to the FBO's texture
     agePingPong.allocate(textureRes, textureRes, GL_RGB32F);
@@ -139,6 +151,7 @@ void ofApp::update(){
     updateAge.setUniformTexture("prevAgeData", agePingPong.src->getTexture(), 0);   // passing the previus age information
     updateAge.setUniform1f("timestep", (float)timeStep);
     updateAge.setUniform1f("life", particleLife);
+    updateAge.setUniform1i("phase", (int)phase);
     
     // draw the source age texture to be updated
     agePingPong.src->draw(0, 0);
@@ -243,6 +256,17 @@ void ofApp::update(){
     densityFilter.begin();
     densityFilter.setUniformTexture("fractalData", fractal.getTexture(), 1);
     densityFilter.setUniform1f("frameNum", (float)sin(ofGetFrameNum()));
+    
+    densityFilter.setUniform1f("thresh1", (float)sThresh[0]);
+    densityFilter.setUniform1f("thresh2", (float)sThresh[1]);
+    densityFilter.setUniform1f("thresh3", (float)sThresh[2]);
+    densityFilter.setUniform1f("thresh4", (float)sThresh[3]);
+    
+    densityFilter.setUniform4f("color1", ofFloatColor::fromHex(sColor[0]));
+    densityFilter.setUniform4f("color2", ofFloatColor::fromHex(sColor[1]));
+    densityFilter.setUniform4f("color3", ofFloatColor::fromHex(sColor[2]));
+    densityFilter.setUniform4f("color4", ofFloatColor::fromHex(sColor[3]));
+    
     effectsPingPong.src->draw(0,0);
     densityFilter.end();
     effectsPingPong.dst->end();
@@ -283,12 +307,12 @@ void ofApp::update(){
     
     
     // Live Effects
-    float beatMult = pow( sin(ofGetFrameNum()*beat), 4);
+    float beatMult = pow( sin(ofGetFrameNum()*beat), 2);
     dancerRadiusSquared = beatMult*40 + 20;
     dancerRadiusSquared *= dancerRadiusSquared;
     frameWidth = beatMult*10 + 20;
     
-    if (effectWindExplode){
+    /*if (effectWindExplode){
         unsigned int f = ofGetFrameNum() - effectWindExplode;
         if (f == 0){
             phase = 2;
@@ -296,15 +320,17 @@ void ofApp::update(){
         } else if (f == 45){
             phase = 1;
             opposingVelocity = opposingVelocityConst/60;
+            
             effectWindExplode = 0;
         }
-    }
+    }*/
     if (effectQuickExplode){
         unsigned int f = ofGetFrameNum() - effectQuickExplode;
         if (f == 0){
             opposingVelocity = opposingVelocityConst/2.0;
         } else if (f == 5){
             opposingVelocity = opposingVelocityConst/60.0;
+            
             effectQuickExplode = 0;
         }
     }
@@ -317,6 +343,7 @@ void ofApp::update(){
             opposingVelocity = opposingVelocityConst/60.0;
         } else if (f == 10){
             phase1Fractal = false;
+            
             effectQuickExplodeFractal = 0;
         }
     }
@@ -403,29 +430,46 @@ void ofApp::keyPressed(int key){
     }
     
     // Effects
+    /*else if (key == 'q')
+        effectWindExplode = ofGetFrameNum();*/
     else if (key == 'q')
-        effectWindExplode = ofGetFrameNum();
-    else if (key == 'w')
         effectQuickExplode = ofGetFrameNum();
-    else if (key == 'e')
+    else if (key == 'w')
         effectQuickExplodeFractal = ofGetFrameNum();
     
     // Modifiers
-    /*else if (key == 'z'){
-        opposingVelocity = -0.5f;
-    } else if (key == 'x'){
-        opposingVelocity = -opposingVelocityConst/2.0; // needs fractal option
-    }*/ else if (key == 'z'){
+    else if (key == 'a'){
         phase1Fractal = false;
         velocityScale = velocityScaleConst;
-    } else if (key == 'x'){
+    } else if (key == 's'){
         phase1Fractal = true;
         velocityScale = -velocityScaleConst;
-    } else if (key == 'c'){
+    } else if (key == 'd'){
         attractToggle = true;
-    } else if (key == 'v'){
+    } else if (key == 'f'){
         attractToggle = false;
-    } // Additionally, write timed W then N effects. Phase 2 play with color and weights try inverting wegiths, phase 3 play with effects try adding random side velocities or mod y position to multiply x vel
+    } // phase 3 play with effects try adding random side velocities or mod y position to multiply x vel
+    
+    // Colors
+    else if (key == 'z'){
+        sThresh[0] = 0.9625;
+        sThresh[1] = 0.5;
+        sThresh[2] = 0.1;
+        sThresh[3] = 0.01875;
+        sColor[0] = 0xFFFFFF;
+        sColor[1] = 0xFCECA3;
+        sColor[2] = 0xA13B4F;
+        sColor[3] = 0x181F54;
+    } else if (key == 'x'){
+        sThresh[0] = 0.9625;
+        sThresh[1] = 0.5;
+        sThresh[2] = 0.8;
+        sThresh[3] = 0.01;
+        sColor[0] = 0xFFFFFF;
+        sColor[1] = 0x37FFF6;
+        sColor[2] = 0x3AFF37;
+        sColor[3] = 0xFCFF37;
+    }
 }
 
 //--------------------------------------------------------------
