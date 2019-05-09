@@ -130,13 +130,25 @@ void ofApp::setup(){
     fractal.allocate(fractalRes, fractalRes, GL_RGB32F);
     fractalGenerator.setup(fractalRes);
     fractalGenerator.startThread();
+    
+    
+    // Setup sockets
+    isConnected = false;
+    address = "http://192.168.1.20:3000";
+    status = "not connected";
+    
+    socketIO.setup(address);
+    
+    ofAddListener(socketIO.notifyEvent, this, &ofApp::gotEvent);
+    
+    ofAddListener(socketIO.connectionEvent, this, &ofApp::onConnection);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    // Map coordinates
-    posX = mouseX;
-    posY = mouseY + height/2;
+    // Use mouse coordinates
+//    posX = mouseX;
+//    posY = mouseY + height/2;
     
     // Create new fractal on different thread
     if (!fractalGenerator.isThreadRunning()){
@@ -414,6 +426,8 @@ void ofApp::draw(){
     frameMesh.addIndex(4);
     
     frameMesh.draw();
+    
+    ofDrawBitmapStringHighlight(ofApp::status, 100, 100);
 }
 
 //--------------------------------------------------------------
@@ -522,3 +536,24 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }
 
+void ofApp::onConnection () {
+    isConnected = true;
+    bindEvents();
+}
+
+void ofApp::bindEvents () {
+    std::string serverEventName = "kinectData";
+    socketIO.bindEvent(serverEvent, serverEventName);
+    ofAddListener(serverEvent, this, &ofApp::onServerEvent);
+}
+
+//--------------------------------------------------------------
+void ofApp::gotEvent(string& name) {
+    status = name;
+}
+
+//--------------------------------------------------------------
+void ofApp::onServerEvent (ofxSocketIOData& data) {
+    posX = data.getFloatValue("x")*width;
+    posY = (data.getFloatValue("y") + 1)*height/2;
+}

@@ -2,6 +2,9 @@
 
 #include "ofMain.h"
 #include "FastNoiseSIMD.h"
+#include "ofEvents.h"
+#include "ofxSocketIO.h"
+#include "ofxSocketIOData.h"
 
 class fractalGenerationThread : public ofThread{
 public:
@@ -154,4 +157,22 @@ public:
     ofVboMesh mesh;
     
     ofVboMesh frameMesh;
+    
+    // Socket stuff
+    
+    void gotEvent(std::string& name);
+    void onServerEvent(ofxSocketIOData& data);
+    
+    ofxSocketIO socketIO;
+    
+    bool isConnected;
+    void onConnection();
+    void bindEvents();
+    ofEvent<ofxSocketIOData&> serverEvent;
+    
+    std::string address;
+    std::string status;
+    
+    int jointX;
+    int jointY;
 };
