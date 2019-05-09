@@ -134,6 +134,7 @@ void ofApp::setup(){
     
     // Setup sockets
     isConnected = false;
+    //jiwon's home ip: 192.168.1.20
     address = "http://192.168.1.20:3000";
     status = "not connected";
     
@@ -147,8 +148,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     // Use mouse coordinates
-    posX = mouseX;
-    posY = mouseY + height/2;
+//    posX = mouseX;
+//    posY = mouseY + height/2;
     
     // Create new fractal on different thread
     if (!fractalGenerator.isThreadRunning()){
@@ -438,8 +439,8 @@ void ofApp::draw(){
     
     frameMesh.draw();
     
-    // log status of sockets
-    cout << ofApp::status << endl;
+//    // log status of sockets
+//    cout << ofApp::status << endl;
     
     // Second half is drawn in ofSecond
 }

@@ -8,12 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		0D6D71394D427E63C15532FC /* FastNoiseSIMD_sse2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB62823F91CF6A98D388A1A /* FastNoiseSIMD_sse2.cpp */; settings = {COMPILER_FLAGS = "-msse2"; }; };
-		15AFFB70F73A26F0EF25B83A /* ofxSocketIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 176E097D53D1B0D55B83E50C /* ofxSocketIO.cpp */; };
 		4A246A4282B5A84D0955A652 /* FastNoiseSIMD_avx512.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B172EFFB69AA5841D7BF5BF /* FastNoiseSIMD_avx512.cpp */; settings = {COMPILER_FLAGS = "-mavx512f"; }; };
-		65943DE499064018865FE537 /* ofxSocketIOData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2F59D7B0E7A54C632B055DC2 /* ofxSocketIOData.cpp */; };
 		6B4E42B39683C16B1A84BDA6 /* FastNoiseSIMD_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E4E8C0A53C3B78FB4644ED /* FastNoiseSIMD_neon.cpp */; };
 		83EE1E81D2EEAEB75A4D7D75 /* FastNoiseSIMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A482914E76F9E4EDF36F9D0D /* FastNoiseSIMD.cpp */; };
 		8592DE7354887C224894CBAA /* FastNoiseSIMD_internal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D06DDC438D5ABCD4656D245 /* FastNoiseSIMD_internal.cpp */; };
+		87790C042284941800C81A7D /* libsioclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BE32284941700C81A7D /* libsioclient.a */; };
+		87790C052284941800C81A7D /* libboost_random-mt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BE42284941700C81A7D /* libboost_random-mt.a */; };
+		87790C062284941800C81A7D /* libboost_date_time-mt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BE52284941700C81A7D /* libboost_date_time-mt.a */; };
+		87790C072284941800C81A7D /* libboost_system-mt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BE62284941700C81A7D /* libboost_system-mt.a */; };
+		87790C082284941800C81A7D /* libsioclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BE82284941700C81A7D /* libsioclient.a */; };
+		87790C092284941800C81A7D /* libboost_random.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BE92284941700C81A7D /* libboost_random.a */; };
+		87790C0A2284941800C81A7D /* libboost_date_time.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BEA2284941700C81A7D /* libboost_date_time.a */; };
+		87790C0B2284941800C81A7D /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BEB2284941700C81A7D /* libboost_system.a */; };
+		87790C0C2284941800C81A7D /* libsioclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BEF2284941700C81A7D /* libsioclient.a */; };
+		87790C0D2284941800C81A7D /* libboost_random.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BF02284941700C81A7D /* libboost_random.a */; };
+		87790C0E2284941800C81A7D /* libboost_date_time.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BF12284941700C81A7D /* libboost_date_time.a */; };
+		87790C0F2284941800C81A7D /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87790BF22284941700C81A7D /* libboost_system.a */; };
+		87790C102284941800C81A7D /* ofxSocketIOData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87790BF72284941700C81A7D /* ofxSocketIOData.cpp */; };
+		87790C112284941800C81A7D /* ofxSocketIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87790BFA2284941700C81A7D /* ofxSocketIO.cpp */; };
 		941A5CC5740D02B7DCF6946A /* FastNoiseSIMD_sse41.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0AEB6F78A1665EBAA8E2E95D /* FastNoiseSIMD_sse41.cpp */; settings = {COMPILER_FLAGS = "-msse4.1"; }; };
 		B747B49FB38380786FB15B5F /* ofSecond.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1A94BCA8820B7307A8BF5B2 /* ofSecond.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
@@ -37,19 +49,35 @@
 		05E4E8C0A53C3B78FB4644ED /* FastNoiseSIMD_neon.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FastNoiseSIMD_neon.cpp; path = src/FastNoiseSIMD/FastNoiseSIMD_neon.cpp; sourceTree = SOURCE_ROOT; };
 		0AEB6F78A1665EBAA8E2E95D /* FastNoiseSIMD_sse41.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FastNoiseSIMD_sse41.cpp; path = src/FastNoiseSIMD/FastNoiseSIMD_sse41.cpp; sourceTree = SOURCE_ROOT; };
 		0D756127C7DAFA727BDC56C3 /* ofSecond.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofSecond.h; path = src/ofSecond.h; sourceTree = SOURCE_ROOT; };
-		176E097D53D1B0D55B83E50C /* ofxSocketIO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxSocketIO.cpp; path = ../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src/ofxSocketIO.cpp; sourceTree = SOURCE_ROOT; };
 		1B172EFFB69AA5841D7BF5BF /* FastNoiseSIMD_avx512.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FastNoiseSIMD_avx512.cpp; path = src/FastNoiseSIMD/FastNoiseSIMD_avx512.cpp; sourceTree = SOURCE_ROOT; };
 		2BB62823F91CF6A98D388A1A /* FastNoiseSIMD_sse2.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FastNoiseSIMD_sse2.cpp; path = src/FastNoiseSIMD/FastNoiseSIMD_sse2.cpp; sourceTree = SOURCE_ROOT; };
-		2F59D7B0E7A54C632B055DC2 /* ofxSocketIOData.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxSocketIOData.cpp; path = ../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src/ofxSocketIOData.cpp; sourceTree = SOURCE_ROOT; };
 		3D06DDC438D5ABCD4656D245 /* FastNoiseSIMD_internal.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FastNoiseSIMD_internal.cpp; path = src/FastNoiseSIMD/FastNoiseSIMD_internal.cpp; sourceTree = SOURCE_ROOT; };
 		41949929D4DB4AF248F13AE7 /* FastNoiseSIMD_internal.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = FastNoiseSIMD_internal.h; path = src/FastNoiseSIMD/FastNoiseSIMD_internal.h; sourceTree = SOURCE_ROOT; };
 		7C3FE7CE6A9F9284AF75AFEC /* FastNoiseSIMD_avx2.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FastNoiseSIMD_avx2.cpp; path = src/FastNoiseSIMD/FastNoiseSIMD_avx2.cpp; sourceTree = SOURCE_ROOT; };
+		87790BDE2284941700C81A7D /* sio_socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sio_socket.h; sourceTree = "<group>"; };
+		87790BDF2284941700C81A7D /* sio_message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sio_message.h; sourceTree = "<group>"; };
+		87790BE02284941700C81A7D /* sio_client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sio_client.h; sourceTree = "<group>"; };
+		87790BE32284941700C81A7D /* libsioclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsioclient.a; sourceTree = "<group>"; };
+		87790BE42284941700C81A7D /* libboost_random-mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libboost_random-mt.a"; sourceTree = "<group>"; };
+		87790BE52284941700C81A7D /* libboost_date_time-mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libboost_date_time-mt.a"; sourceTree = "<group>"; };
+		87790BE62284941700C81A7D /* libboost_system-mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libboost_system-mt.a"; sourceTree = "<group>"; };
+		87790BE82284941700C81A7D /* libsioclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsioclient.a; sourceTree = "<group>"; };
+		87790BE92284941700C81A7D /* libboost_random.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_random.a; sourceTree = "<group>"; };
+		87790BEA2284941700C81A7D /* libboost_date_time.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_date_time.a; sourceTree = "<group>"; };
+		87790BEB2284941700C81A7D /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_system.a; sourceTree = "<group>"; };
+		87790BED2284941700C81A7D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		87790BEF2284941700C81A7D /* libsioclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsioclient.a; sourceTree = "<group>"; };
+		87790BF02284941700C81A7D /* libboost_random.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_random.a; sourceTree = "<group>"; };
+		87790BF12284941700C81A7D /* libboost_date_time.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_date_time.a; sourceTree = "<group>"; };
+		87790BF22284941700C81A7D /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_system.a; sourceTree = "<group>"; };
+		87790BF32284941700C81A7D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		87790BF72284941700C81A7D /* ofxSocketIOData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSocketIOData.cpp; sourceTree = "<group>"; };
+		87790BF82284941700C81A7D /* ofxSocketIOData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSocketIOData.h; sourceTree = "<group>"; };
+		87790BF92284941700C81A7D /* ofxSocketIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSocketIO.h; sourceTree = "<group>"; };
+		87790BFA2284941700C81A7D /* ofxSocketIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSocketIO.cpp; sourceTree = "<group>"; };
 		97D022DC824E92030677943D /* FastNoiseSIMD.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = FastNoiseSIMD.h; path = src/FastNoiseSIMD/FastNoiseSIMD.h; sourceTree = SOURCE_ROOT; };
 		A1A94BCA8820B7307A8BF5B2 /* ofSecond.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofSecond.cpp; path = src/ofSecond.cpp; sourceTree = SOURCE_ROOT; };
 		A482914E76F9E4EDF36F9D0D /* FastNoiseSIMD.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FastNoiseSIMD.cpp; path = src/FastNoiseSIMD/FastNoiseSIMD.cpp; sourceTree = SOURCE_ROOT; };
-		B3DF4F6F9A60C19FFA358DC7 /* ofxSocketIOData.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofxSocketIOData.h; path = ../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src/ofxSocketIOData.h; sourceTree = SOURCE_ROOT; };
-		C76107CF4B231F5F6BA79F73 /* ofxSocketIO.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofxSocketIO.h; path = ../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src/ofxSocketIO.h; sourceTree = SOURCE_ROOT; };
-		D9EB2323451F5E34786333B8 /* sio_client.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = sio_client.h; path = "../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include/sio_client.h"; sourceTree = SOURCE_ROOT; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../../../Dev/OpenFrameworks/libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../../../Dev/OpenFrameworks/libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../../../Dev/OpenFrameworks/libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -232,8 +260,6 @@
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E7070D842284753A00EA99CD /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = "<group>"; };
-		EC67728E5EF070FA74834182 /* sio_socket.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = sio_socket.h; path = "../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include/sio_socket.h"; sourceTree = SOURCE_ROOT; };
-		FD593E663C159A81EAD79C02 /* sio_message.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = sio_message.h; path = "../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include/sio_message.h"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -241,37 +267,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87790C092284941800C81A7D /* libboost_random.a in Frameworks */,
+				87790C0E2284941800C81A7D /* libboost_date_time.a in Frameworks */,
+				87790C0A2284941800C81A7D /* libboost_date_time.a in Frameworks */,
+				87790C0D2284941800C81A7D /* libboost_random.a in Frameworks */,
+				87790C0C2284941800C81A7D /* libsioclient.a in Frameworks */,
+				87790C0B2284941800C81A7D /* libboost_system.a in Frameworks */,
+				87790C0F2284941800C81A7D /* libboost_system.a in Frameworks */,
+				87790C042284941800C81A7D /* libsioclient.a in Frameworks */,
+				87790C052284941800C81A7D /* libboost_random-mt.a in Frameworks */,
+				87790C062284941800C81A7D /* libboost_date_time-mt.a in Frameworks */,
+				87790C082284941800C81A7D /* libsioclient.a in Frameworks */,
+				87790C072284941800C81A7D /* libboost_system-mt.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0C0E305F9C288888E38B440C /* socket.io-client */ = {
-			isa = PBXGroup;
-			children = (
-				84538363DF095F090FF43FBF /* include */,
-			);
-			name = "socket.io-client";
-			sourceTree = "<group>";
-		};
-		1654D1369875BFEFCE99E26C /* ofxSocketIO */ = {
-			isa = PBXGroup;
-			children = (
-				18D8FDA29066C0C9A51B3EC9 /* libs */,
-				90E9E194F97CB6FBFA12FB15 /* src */,
-			);
-			name = ofxSocketIO;
-			sourceTree = "<group>";
-		};
-		18D8FDA29066C0C9A51B3EC9 /* libs */ = {
-			isa = PBXGroup;
-			children = (
-				0C0E305F9C288888E38B440C /* socket.io-client */,
-			);
-			name = libs;
-			sourceTree = "<group>";
-		};
 		6948EE371B920CB800B5AC1A /* local_addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,31 +292,110 @@
 			name = local_addons;
 			sourceTree = "<group>";
 		};
-		84538363DF095F090FF43FBF /* include */ = {
+		87790BBD2284941700C81A7D /* ofxSocketIO */ = {
 			isa = PBXGroup;
 			children = (
-				D9EB2323451F5E34786333B8 /* sio_client.h */,
-				FD593E663C159A81EAD79C02 /* sio_message.h */,
-				EC67728E5EF070FA74834182 /* sio_socket.h */,
+				87790BDB2284941700C81A7D /* libs */,
+				87790BF62284941700C81A7D /* src */,
 			);
-			name = include;
+			path = ofxSocketIO;
 			sourceTree = "<group>";
 		};
-		90E9E194F97CB6FBFA12FB15 /* src */ = {
+		87790BDB2284941700C81A7D /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				176E097D53D1B0D55B83E50C /* ofxSocketIO.cpp */,
-				C76107CF4B231F5F6BA79F73 /* ofxSocketIO.h */,
-				2F59D7B0E7A54C632B055DC2 /* ofxSocketIOData.cpp */,
-				B3DF4F6F9A60C19FFA358DC7 /* ofxSocketIOData.h */,
+				87790BDC2284941700C81A7D /* socket.io-client */,
 			);
-			name = src;
+			path = libs;
+			sourceTree = "<group>";
+		};
+		87790BDC2284941700C81A7D /* socket.io-client */ = {
+			isa = PBXGroup;
+			children = (
+				87790BDD2284941700C81A7D /* include */,
+				87790BE12284941700C81A7D /* lib */,
+			);
+			path = "socket.io-client";
+			sourceTree = "<group>";
+		};
+		87790BDD2284941700C81A7D /* include */ = {
+			isa = PBXGroup;
+			children = (
+				87790BDE2284941700C81A7D /* sio_socket.h */,
+				87790BDF2284941700C81A7D /* sio_message.h */,
+				87790BE02284941700C81A7D /* sio_client.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		87790BE12284941700C81A7D /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				87790BE22284941700C81A7D /* osx */,
+				87790BE72284941700C81A7D /* linuxarmv6l */,
+				87790BEC2284941700C81A7D /* linux */,
+				87790BEE2284941700C81A7D /* linux64 */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		87790BE22284941700C81A7D /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				87790BE32284941700C81A7D /* libsioclient.a */,
+				87790BE42284941700C81A7D /* libboost_random-mt.a */,
+				87790BE52284941700C81A7D /* libboost_date_time-mt.a */,
+				87790BE62284941700C81A7D /* libboost_system-mt.a */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
+		87790BE72284941700C81A7D /* linuxarmv6l */ = {
+			isa = PBXGroup;
+			children = (
+				87790BE82284941700C81A7D /* libsioclient.a */,
+				87790BE92284941700C81A7D /* libboost_random.a */,
+				87790BEA2284941700C81A7D /* libboost_date_time.a */,
+				87790BEB2284941700C81A7D /* libboost_system.a */,
+			);
+			path = linuxarmv6l;
+			sourceTree = "<group>";
+		};
+		87790BEC2284941700C81A7D /* linux */ = {
+			isa = PBXGroup;
+			children = (
+				87790BED2284941700C81A7D /* README.md */,
+			);
+			path = linux;
+			sourceTree = "<group>";
+		};
+		87790BEE2284941700C81A7D /* linux64 */ = {
+			isa = PBXGroup;
+			children = (
+				87790BEF2284941700C81A7D /* libsioclient.a */,
+				87790BF02284941700C81A7D /* libboost_random.a */,
+				87790BF12284941700C81A7D /* libboost_date_time.a */,
+				87790BF22284941700C81A7D /* libboost_system.a */,
+				87790BF32284941700C81A7D /* README.md */,
+			);
+			path = linux64;
+			sourceTree = "<group>";
+		};
+		87790BF62284941700C81A7D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				87790BF72284941700C81A7D /* ofxSocketIOData.cpp */,
+				87790BF82284941700C81A7D /* ofxSocketIOData.h */,
+				87790BF92284941700C81A7D /* ofxSocketIO.h */,
+				87790BFA2284941700C81A7D /* ofxSocketIO.cpp */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				1654D1369875BFEFCE99E26C /* ofxSocketIO */,
+				87790BBD2284941700C81A7D /* ofxSocketIO */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -733,6 +825,7 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
+				87790C112284941800C81A7D /* ofxSocketIO.cpp in Sources */,
 				B747B49FB38380786FB15B5F /* ofSecond.cpp in Sources */,
 				0D6D71394D427E63C15532FC /* FastNoiseSIMD_sse2.cpp in Sources */,
 				941A5CC5740D02B7DCF6946A /* FastNoiseSIMD_sse41.cpp in Sources */,
@@ -740,9 +833,8 @@
 				8592DE7354887C224894CBAA /* FastNoiseSIMD_internal.cpp in Sources */,
 				F8C88094A2BDB5FA6DA3B093 /* FastNoiseSIMD_avx2.cpp in Sources */,
 				6B4E42B39683C16B1A84BDA6 /* FastNoiseSIMD_neon.cpp in Sources */,
+				87790C102284941800C81A7D /* ofxSocketIOData.cpp in Sources */,
 				83EE1E81D2EEAEB75A4D7D75 /* FastNoiseSIMD.cpp in Sources */,
-				15AFFB70F73A26F0EF25B83A /* ofxSocketIO.cpp in Sources */,
-				65943DE499064018865FE537 /* ofxSocketIOData.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -775,13 +867,6 @@
 					src,
 					src,
 					src/FastNoiseSIMD,
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs,
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx",
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -808,27 +893,21 @@
 					src,
 					src,
 					src/FastNoiseSIMD,
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs,
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx",
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = /Applications;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/osx",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/linux64",
+				);
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_LIBS)",
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(LIB_OF)",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libsioclient.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_random-mt.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_date_time-mt.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_system-mt.a",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -860,13 +939,6 @@
 					src,
 					src,
 					src/FastNoiseSIMD,
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs,
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx",
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
@@ -904,13 +976,6 @@
 					src,
 					src,
 					src/FastNoiseSIMD,
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs,
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx",
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -937,27 +1002,21 @@
 					src,
 					src,
 					src/FastNoiseSIMD,
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs,
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx",
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src,
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = /Applications;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/osx",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/linux64",
+				);
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_LIBS)",
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(LIB_OF_DEBUG)",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libsioclient.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_random-mt.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_date_time-mt.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_system-mt.a",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				WRAPPER_EXTENSION = app;
@@ -978,27 +1037,21 @@
 					src,
 					src,
 					src/FastNoiseSIMD,
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs,
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx",
-					../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/src,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = /Applications;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/osx",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/linuxarmv6l",
+					"$(PROJECT_DIR)/ofxSocketIO/libs/socket.io-client/lib/linux64",
+				);
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_LIBS)",
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(LIB_OF)",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libsioclient.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_random-mt.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_date_time-mt.a",
-					"../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/lib/osx/libboost_system-mt.a",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
