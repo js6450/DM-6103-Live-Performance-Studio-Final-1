@@ -13,17 +13,20 @@ void ofApp::setup(){
     frameMesh.setUsage(GL_DYNAMIC_DRAW);
     
     // Set variables
+    beat = 154/4/4; // Bpm divided by measures/min divided by beats/measure
     particleSize = 1.5f;
     particleLife = 15.0f;
-    velocityScaleConst = 0.7f; // 0.7f on mine, 0.45f on live
-    opposingVelocityConst = -30.0f; // 30.0f on mine, 25.0f on live
+    velocityScaleConst = 0.7f; // Adjust for speed ( 0.45f on live )
+    opposingVelocityConst = -25.0f; // Adjust so effects work properly ( 25.0f on live )
     timeStep = 0.005f;
     numParticles = 200000; // Turn up as much as possible, 500000 decent, comment in AVX on FastNoiseSIMD.h if possible
-    dancerRadiusSquared = 50*50; // Controlled somewhere else
+    dancerRadiusSquared = 100*100; // Controlled somewhere else
     frameWidth = 25;
     phase = 1;
     attractToggle = true;
+    phase1Fractal = false;
     
+    beat = beat*M_PI/360;
     velocityScale = velocityScaleConst;
     opposingVelocity = opposingVelocityConst/60.0;
     
@@ -184,6 +187,7 @@ void ofApp::update(){
     updatePos.setUniform1f("timestep", (float) timeStep);
     updatePos.setUniform1f("velocityScale", (float)velocityScale);
     updatePos.setUniform1i("phase", (int)phase);
+    updatePos.setUniform1i("phase1Fractal", (int)phase1Fractal);
     
     // draw the source position texture to be updated
     posPingPong.src->draw(0, 0);
@@ -279,28 +283,41 @@ void ofApp::update(){
     
     
     // Live Effects
-    dancerRadiusSquared = sin(ofGetFrameNum()*0.1)*20 + 40;
+    float beatMult = pow( sin(ofGetFrameNum()*beat), 4);
+    dancerRadiusSquared = beatMult*40 + 20;
     dancerRadiusSquared *= dancerRadiusSquared;
-    frameWidth = sin(ofGetFrameNum()*0.1)*5 + 25;
+    frameWidth = beatMult*10 + 20;
     
     if (effectWindExplode){
         unsigned int f = ofGetFrameNum() - effectWindExplode;
         if (f == 0){
             phase = 2;
-            opposingVelocity = -opposingVelocityConst;
+            opposingVelocity = opposingVelocityConst;
         } else if (f == 45){
             phase = 1;
-            opposingVelocity = -0.5f;
+            opposingVelocity = opposingVelocityConst/60;
             effectWindExplode = 0;
         }
     }
     if (effectQuickExplode){
         unsigned int f = ofGetFrameNum() - effectQuickExplode;
         if (f == 0){
-            opposingVelocity = -opposingVelocityConst/2.0;
+            opposingVelocity = opposingVelocityConst/2.0;
         } else if (f == 5){
-            opposingVelocity = -0.5f;
+            opposingVelocity = opposingVelocityConst/60.0;
             effectQuickExplode = 0;
+        }
+    }
+    if (effectQuickExplodeFractal){
+        unsigned int f = ofGetFrameNum() - effectQuickExplodeFractal;
+        if (f == 0){
+            phase1Fractal = true;
+            opposingVelocity = opposingVelocityConst/2.0;
+        } else if (f == 5){
+            opposingVelocity = opposingVelocityConst/60.0;
+        } else if (f == 10){
+            phase1Fractal = false;
+            effectQuickExplodeFractal = 0;
         }
     }
 }
@@ -309,8 +326,10 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
+    // Draw image
     effectsPingPong.src->getTexture().drawSubsection(0,0,width,height/2,0,height/2);
     
+    // Draw frame
     int fWidth = ofGetWindowWidth();
     int fHeight = ofGetWindowHeight();
     frameMesh.clear();
@@ -388,21 +407,25 @@ void ofApp::keyPressed(int key){
         effectWindExplode = ofGetFrameNum();
     else if (key == 'w')
         effectQuickExplode = ofGetFrameNum();
+    else if (key == 'e')
+        effectQuickExplodeFractal = ofGetFrameNum();
     
     // Modifiers
-    else if (key == 'z'){
+    /*else if (key == 'z'){
         opposingVelocity = -0.5f;
     } else if (key == 'x'){
-        opposingVelocity = -opposingVelocityConst/2.0;
-    } else if (key == 'c'){
+        opposingVelocity = -opposingVelocityConst/2.0; // needs fractal option
+    }*/ else if (key == 'z'){
+        phase1Fractal = false;
         velocityScale = velocityScaleConst;
-    } else if (key == 'v'){
+    } else if (key == 'x'){
+        phase1Fractal = true;
         velocityScale = -velocityScaleConst;
-    } else if (key == 'b'){
+    } else if (key == 'c'){
         attractToggle = true;
-    } else if (key == 'n'){
+    } else if (key == 'v'){
         attractToggle = false;
-    }
+    } // Additionally, write timed W then N effects. Phase 2 play with color and weights try inverting wegiths, phase 3 play with effects try adding random side velocities or mod y position to multiply x vel
 }
 
 //--------------------------------------------------------------

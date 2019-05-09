@@ -107,6 +107,7 @@ public:
     int textureRes;
     int fractalRes;
     int frameWidth;
+    float beat;
     float dancerRadiusSquared;
     float timeStep;
     float velocityScale;
@@ -115,12 +116,14 @@ public:
     float opposingVelocity;
     int phase;
     bool attractToggle;
+    bool phase1Fractal;
     
     float velocityScaleConst;
     float opposingVelocityConst;
     
     uint64 effectWindExplode = 0;
     uint64 effectQuickExplode = 0;
+    uint64 effectQuickExplodeFractal = 0;
     
     ofShader updatePos;
     ofShader updateVel;

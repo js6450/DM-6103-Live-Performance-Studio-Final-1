@@ -22,7 +22,7 @@ const float PI = 3.1415926535897932384626433832795;
 void main(void){
     
     float dancerRad = dancerRadiusSquared;
-    if (phase == 3) dancerRad /= 16;
+    if (phase == 3) dancerRad /= 9;
     
     // Get the position and velocity from the pixel color.
     vec2 pos = texture( posData, vTexCoord).rg;
@@ -52,7 +52,7 @@ void main(void){
                 vel.x = 0;
                 vel.y = 0;
                 //            angle += PI/2;
-                force = opposingVelocity*5;
+                force = -opposingVelocity*5;
             }
         } else{
             if (phase == 2) force *= 2;
