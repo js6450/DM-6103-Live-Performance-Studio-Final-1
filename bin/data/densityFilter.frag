@@ -14,6 +14,7 @@ uniform vec4 color1;
 uniform vec4 color2;
 uniform vec4 color3;
 uniform vec4 color4;
+uniform vec4 color5;
 
 in vec2 vTexCoord;
 out vec4 outputColor;
@@ -21,8 +22,10 @@ out vec4 outputColor;
 void main()
 {
 
-    vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
+    // Default to last color
+    vec4 color = color5;
     
+    // Get density (lightness) of surrounding area with gaussian weights
     float surrounding =
         texture(tex0, vTexCoord + vec2( 0.0,  0.0)).r * 0.150342
         +
@@ -53,6 +56,7 @@ void main()
         texture(tex0, vTexCoord + vec2( 1.0,  2.0)).r * 0.015019
         ;
     
+    // Map densities to colors using thresholds
     if (surrounding > thresh1)
         color = color1;
     else if (surrounding > thresh2)

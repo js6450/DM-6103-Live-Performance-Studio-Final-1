@@ -8,5 +8,6 @@ public:
     void update();
     void draw();
     
+    // Pointer to main window
     shared_ptr<ofApp> main;
 };

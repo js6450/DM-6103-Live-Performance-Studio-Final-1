@@ -13,6 +13,7 @@ out vec4 vFragColor;
 void main(void){
     // Get the age from the pixel color.
     float trueAge = texture( prevAgeData, vTexCoord ).g;
+    float originalAge = texture( prevAgeData, vTexCoord ).b;
     
     // Update the age
     trueAge += timestep;
@@ -27,6 +28,6 @@ void main(void){
     }
     
     // And finally store it on the position FBO.
-    vFragColor = vec4(age,trueAge,1.0,1.0);
+    vFragColor = vec4(age,trueAge,originalAge,1.0);
 }
 

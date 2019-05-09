@@ -4,6 +4,7 @@
 
 //
 // Note: there are computer specific settings for: OpenGL 3, SIMD 4.1, and Apple Clang
+// XY positions [0,1] are received from kinect/software via websockets on a local server
 //
 
 void ofApp::setup(){
@@ -13,7 +14,7 @@ void ofApp::setup(){
     frameMesh.setUsage(GL_DYNAMIC_DRAW);
     
     // Set variables
-    beat = 5; // Bpm divided by measures/min divided by beats/measure?
+    beat = 5; // How many "bangs" per minute. Bpm divided by measures/min divided by beats/measure?
     particleSize = 1.5f;
     particleLife = 15.0f;
     velocityScaleConst = 0.5f; // Adjust for speed ( 0.45f on live )
@@ -26,11 +27,11 @@ void ofApp::setup(){
     attractToggle = true;
     phase1Fractal = false;
     
-    beat = beat*M_PI/360;
+    beat = beat*M_PI/360; // Convert for input to SIN()
     velocityScale = velocityScaleConst;
     opposingVelocity = opposingVelocityConst/60.0;
     
-    // Set default colors
+    // Set default colors/thresh for densityFilter shader
     sThresh[0] = 0.9625;
     sThresh[1] = 0.5;
     sThresh[2] = 0.1;
@@ -40,21 +41,22 @@ void ofApp::setup(){
     sColor[1] = 0xFCECA3;
     sColor[2] = 0xA13B4F;
     sColor[3] = 0x181F54;
+    sColor[4] = 0x000000;
     
     // Seting the textures where the information ( position and velocity ) will be
     textureRes = (int)sqrt((float)numParticles);
     numParticles = textureRes * textureRes;
     
     // Loading the Shaders
-    updatePos.load("passthru.vert", "posUpdate.frag");// shader for updating the texture that store the particles position on RG channels
-    updateVel.load("passthru.vert", "velUpdate.frag");// shader for updating the texture that store the particles velocity on RG channels
-    updateAge.load("passthru.vert", "ageUpdate.frag");// shader for updating the texture that store the particles velocity on R channel
-    densityFilter.load("passthru.vert", "densityFilter.frag");
-    blurX.load("passthru.vert", "blurX.frag");
+    updatePos.load("passthru.vert", "posUpdate.frag"); // shader for updating the texture that store the particles position on RG channels
+    updateVel.load("passthru.vert", "velUpdate.frag"); // shader for updating the texture that store the particles velocity on RG channels
+    updateAge.load("passthru.vert", "ageUpdate.frag"); // shader for updating the texture that store the particles effective age (for alternative lifespans) on R, true age on G, and original age on B.
+    densityFilter.load("passthru.vert", "densityFilter.frag");// Shader that converts particles into flatenned image based on desnity of rendered particles
+    blurX.load("passthru.vert", "blurX.frag"); // Shaders for glow
     blurY.load("passthru.vert", "blurY.frag");
     glowAdd.load("passthru.vert", "glowAdd.frag");
     
-    // Frag, Vert and Geo shaders for the rendering process of the spark image
+    // Frag, Vert and Geo shaders for the rendering process of the particles
     updateRender.setGeometryInputType(GL_POINTS);
     updateRender.setGeometryOutputType(GL_TRIANGLE_STRIP);
     updateRender.setGeometryOutputCount(6);
@@ -105,7 +107,7 @@ void ofApp::setup(){
     // Loading and setings of the variables of the textures of the particles
     particleImg.load("dot.png");
     
-    // Allocate the final
+    // Allocate the particle renderer
     renderFBO.allocate(width, height, GL_RGB32F);
     renderFBO.begin();
     ofClear(0, 0, 0, 255);
@@ -119,18 +121,16 @@ void ofApp::setup(){
         }
     }
     
-    // Allocate the effects
+    // Allocate some effects
     effectsPingPong.allocate(width, height, GL_RGB32F);
     glowAddFBO.allocate(width, height, GL_RGB32F);
     
-    
-    // Create fractal noise map array values -1 : 1
+    // Create fractal noise map array, values are [-1, 1]
     fractalRes = width;
     if (height > width) fractalRes = height;
     fractal.allocate(fractalRes, fractalRes, GL_RGB32F);
     fractalGenerator.setup(fractalRes);
     fractalGenerator.startThread();
-    
     
     // Setup sockets
     isConnected = false;
@@ -147,8 +147,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     // Use mouse coordinates
-//    posX = mouseX;
-//    posY = mouseY + height/2;
+    posX = mouseX;
+    posY = mouseY + height/2;
     
     // Create new fractal on different thread
     if (!fractalGenerator.isThreadRunning()){
@@ -156,7 +156,7 @@ void ofApp::update(){
         fractalGenerator.startThread();
     }
     
-    // Ages PingPong
+    // Update ages
     agePingPong.dst->begin();
     ofClear(0);
     updateAge.begin();
@@ -165,7 +165,6 @@ void ofApp::update(){
     updateAge.setUniform1f("life", particleLife);
     updateAge.setUniform1i("phase", (int)phase);
     
-    // draw the source age texture to be updated
     agePingPong.src->draw(0, 0);
     
     updateAge.end();
@@ -174,7 +173,7 @@ void ofApp::update(){
     agePingPong.swap();
     
     
-    // Velocities PingPong
+    // Update velocities
     velPingPong.dst->begin();
     ofClear(0);
     updateVel.begin();
@@ -190,7 +189,6 @@ void ofApp::update(){
     updateVel.setUniform1i("phase", (int)phase);
     updateVel.setUniform1i("attractToggle", (int)attractToggle);
     
-    // draw the source velocity texture to be updated
     velPingPong.src->draw(0, 0);
     
     updateVel.end();
@@ -199,7 +197,7 @@ void ofApp::update(){
     velPingPong.swap();
     
     
-    // Positions PingPong
+    // Update positions
     posPingPong.dst->begin();
     ofClear(0);
     updatePos.begin();
@@ -214,7 +212,6 @@ void ofApp::update(){
     updatePos.setUniform1i("phase", (int)phase);
     updatePos.setUniform1i("phase1Fractal", (int)phase1Fractal);
     
-    // draw the source position texture to be updated
     posPingPong.src->draw(0, 0);
     
     updatePos.end();
@@ -256,14 +253,19 @@ void ofApp::update(){
     renderFBO.end();
     ofPopStyle();
     
-    // Transfer renderFBO to effectsPingPong src
+    // Transfer rendered particles on renderFBO to effectsPingPong src FBO
     effectsPingPong.src->begin();
     ofClear(0);
     renderFBO.draw(0,0);
     effectsPingPong.src->end();
     
+    
+    ///////
     // Apply effects
-    effectsPingPong.dst->begin(); // Density effect
+    ///////
+    
+    // DensityFilter effect
+    effectsPingPong.dst->begin();
     ofClear(0);
     densityFilter.begin();
     densityFilter.setUniformTexture("fractalData", fractal.getTexture(), 1);
@@ -278,6 +280,7 @@ void ofApp::update(){
     densityFilter.setUniform4f("color2", ofFloatColor::fromHex(sColor[1]));
     densityFilter.setUniform4f("color3", ofFloatColor::fromHex(sColor[2]));
     densityFilter.setUniform4f("color4", ofFloatColor::fromHex(sColor[3]));
+    densityFilter.setUniform4f("color5", ofFloatColor::fromHex(sColor[4]));
     
     effectsPingPong.src->draw(0,0);
     densityFilter.end();
@@ -318,12 +321,17 @@ void ofApp::update(){
     
     
     
-    // Live Effects
+    ///////
+    // Live effects
+    ///////
+    
+    // Oscillate frame
     float beatMult = pow( sin(ofGetFrameNum()*beat), 2);
     dancerRadiusSquared = beatMult*40 + 20;
     dancerRadiusSquared *= dancerRadiusSquared;
     frameWidth = beatMult*10 + 20;
     
+    // Timed effects
     /*if (effectWindExplode){
         unsigned int f = ofGetFrameNum() - effectWindExplode;
         if (f == 0){
@@ -337,12 +345,15 @@ void ofApp::update(){
         }
     }*/
     if (effectQuickExplode){
+        // get frames since effect called
         unsigned int f = ofGetFrameNum() - effectQuickExplode;
         if (f == 0){
+            // Eject particles from center by increasing opposing velocity
             opposingVelocity = opposingVelocityConst/2.0;
         } else if (f == 5){
+            // Reset opposing velocity
             opposingVelocity = opposingVelocityConst/60.0;
-            
+            // Reset effect timer and turn off this effect
             effectQuickExplode = 0;
         }
     }
@@ -365,7 +376,7 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
-    // Draw image
+    // Draw 1st half of image
     effectsPingPong.src->getTexture().drawSubsection(0,0,width,height/2,0,height/2);
     
     // Draw frame
@@ -427,21 +438,21 @@ void ofApp::draw(){
     
     frameMesh.draw();
     
-    ofDrawBitmapStringHighlight(ofApp::status, 100, 100);
+    // log status of sockets
+    cout << ofApp::status << endl;
+    
+    // Second half is drawn in ofSecond
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     // Phases
-    if (key == '1'){
+    if (key == '1')
         phase = 1;
-//        particleLife = 15.0f;
-    } else if (key == '2'){
+    else if (key == '2')
         phase = 2;
-//        particleLife = 3.0f;
-    } else if (key == '3'){
+    else if (key == '3')
         phase = 3;
-    }
     
     // Effects
     /*else if (key == 'q')
@@ -452,19 +463,19 @@ void ofApp::keyPressed(int key){
         effectQuickExplodeFractal = ofGetFrameNum();
     
     // Modifiers
-    else if (key == 'a'){
+    else if (key == 'a'){ // Normal attraction
         phase1Fractal = false;
         velocityScale = velocityScaleConst;
-    } else if (key == 's'){
+    } else if (key == 's'){ // Anti attraction
         phase1Fractal = true;
         velocityScale = -velocityScaleConst;
-    } else if (key == 'd'){
+    } else if (key == 'd'){ // Normal attraction
         attractToggle = true;
-    } else if (key == 'f'){
+    } else if (key == 'f'){ // Paused attraction
         attractToggle = false;
     } // phase 3 play with effects try adding random side velocities or mod y position to multiply x vel
     
-    // Colors
+    // Change colors/thresholds in densityFilter
     else if (key == 'z'){
         sThresh[0] = 0.9625;
         sThresh[1] = 0.5;
@@ -474,6 +485,7 @@ void ofApp::keyPressed(int key){
         sColor[1] = 0xFCECA3;
         sColor[2] = 0xA13B4F;
         sColor[3] = 0x181F54;
+        sColor[4] = 0x000000;
     } else if (key == 'x'){
         sThresh[0] = 0.9625;
         sThresh[1] = 0.5;
@@ -483,6 +495,7 @@ void ofApp::keyPressed(int key){
         sColor[1] = 0x37FFF6;
         sColor[2] = 0x3AFF37;
         sColor[3] = 0xFCFF37;
+        sColor[4] = 0xFCFF00;
     }
 }
 
@@ -536,6 +549,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }
 
+// Socket stuff
 void ofApp::onConnection () {
     isConnected = true;
     bindEvents();

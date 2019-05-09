@@ -231,6 +231,7 @@
 		E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofApp.h; path = src/ofApp.h; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E7070D842284753A00EA99CD /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = "<group>"; };
 		EC67728E5EF070FA74834182 /* sio_socket.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = sio_socket.h; path = "../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include/sio_socket.h"; sourceTree = SOURCE_ROOT; };
 		FD593E663C159A81EAD79C02 /* sio_message.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = sio_message.h; path = "../../../../../Dev/OpenFrameworks/addons/ofxSocketIO/libs/socket.io-client/include/sio_message.h"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -615,6 +616,7 @@
 				BB4B014C10F69532006C3DED /* addons */,
 				6948EE371B920CB800B5AC1A /* local_addons */,
 				E4B69B5B0A3A1756003C02F2 /* DM 6103 Live Performance Studio FinalDebug.app */,
+				E7070D842284753A00EA99CD /* data */,
 			);
 			sourceTree = "<group>";
 		};
